@@ -14,9 +14,6 @@ const SignupComp = () => {
     const [informationText, setInformationText] = useState('');
 
     const registerButton = async () => {
-        // console.log("hii");
-        // console.log(name, email, phone, password);
-
         if (!name) {
             setInformationText("Name Required");
         } else if (!email) {
@@ -36,8 +33,6 @@ const SignupComp = () => {
             })
                 .then(res => res.json()).then(
                     async data => {
-                        // console.log(data);
-                        // window.location.href = '/email_verification'
                         if (!data.data) {
                             setInformationText(data.message);
                         } else if (data.data) {
@@ -51,8 +46,7 @@ const SignupComp = () => {
     }
     return (
         <>
-            <LandingPageHeader />
-            <div className="flex items-center min-h-full p-0 bg-gray-50 dark:bg-gray-900">
+            <div className="flex items-center min-h-screen p-0 bg-gray-50 dark:bg-gray-900">
                 <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
                     <div className="flex flex-col overflow-y-auto md:flex-row">
                         <div className="h-32 md:h-auto md:w-1/2">
@@ -99,14 +93,8 @@ const SignupComp = () => {
                                 </button>
                                 <hr className="my-8" />
                                 <p className="mt-4">
-                                    {/* <Link href='/auth/login'>  <a className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline">
-                                        Already have an account? Login
-                                    </a>
-                                    </Link> */}
                                     <Link href='/auth/login'>
-                                        {/* <a className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline">  */}
                                         Already have an account? Login
-                                        {/* </a> */}
                                     </Link>
                                 </p>
                             </div>
@@ -114,58 +102,8 @@ const SignupComp = () => {
                     </div>
                 </div>
             </div>
-            {/* <Link href='/auth/login'>
-                <a>Login</a>
-            </Link> */}
         </>
     );
 };
 
 export default SignupComp;
-
-
-// import React, { useState } from 'react';
-// import firebase from './firebase';
-
-// const PhoneAuth = () => {
-//     const [phoneNumber, setPhoneNumber] = useState('');
-//     const [verificationCode, setVerificationCode] = useState('');
-//     const [verificationId, setVerificationId] = useState('');
-
-//     const handleSendCode = () => {
-//         const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('send-code-button', {
-//             size: 'invisible',
-//         });
-
-//         firebase.auth().signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
-//             .then((verificationId: React.SetStateAction<string>) => {
-//                 setVerificationId(verificationId);
-//             })
-//             .catch((error: any) => {
-//                 console.error(error);
-//             });
-//     };
-
-//     const handleVerifyCode = () => {
-//         const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode);
-
-//         firebase.auth().signInWithCredential(credential)
-//             .then(() => {
-//                 // User signed in successfully
-//             })
-//             .catch((error: any) => {
-//                 console.error(error);
-//             });
-//     };
-
-//     return (
-//         <>
-//             <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-//             <button id="send-code-button" onClick={handleSendCode}>Send Code</button>
-//             <input type="text" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-//             <button onClick={handleVerifyCode}>Verify Code</button>
-//         </>
-//     );
-// };
-
-// export default PhoneAuth;
