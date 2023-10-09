@@ -79,31 +79,50 @@ export const SidebarWrapper = () => {
                 aria-label="Single selection example"
                 variant="flat"
                 disallowEmptySelection
-                selectionMode="single"
+                // selectionMode="single"
                 selectedKeys={selectedKeys}
               >
                 <DropdownItem key="Master Key">
                   <SidebarItem
                     isActive={router.pathname === '/admin/MasterKey/addItem'}
-                    title="Supplier"
+                    title="Item"
                     icon={<AccountsIcon />}
-                    href={auth ? "/admin/MasterKey/addItem" : "/"}
+                    href={"/admin/MasterKey/addItem"}
                   />
                 </DropdownItem>
-                <DropdownItem key="number">
 
+                <DropdownItem key="single_date">
+                  <SidebarItem
+                    isActive={router.pathname === '/admin/Sale'}
+                    title="Product List"
+                    icon={<BalanceIcon />}
+                    href={auth ? "/admin/business" : "/"}
+                  />
                 </DropdownItem>
-                <DropdownItem key="date">Date</DropdownItem>
-                <DropdownItem key="single_date">Single Date</DropdownItem>
-                <DropdownItem key="iteration">Iteration</DropdownItem>
+                <DropdownItem key="single_date">
+                  <SidebarItem
+                    isActive={router.pathname === '/admin/Sale'}
+                    title="Head"
+                    icon={<BalanceIcon />}
+                    href={auth ? "/admin/business" : "/"}
+                  />
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
+
+            {/* <SidebarItem
+              isActive={router.pathname === '/admin/MasterKey/addItem'}
+              title="Supplier"
+              icon={<AccountsIcon />}
+              href={"/admin/MasterKey/addItem"}
+            /> */}
+
             <SidebarMenu title="Main Menu">
-              <CollapseItems
+              {/* <CollapseItems
                 icon={<BalanceIcon />}
                 items={['Items', 'Product List', 'Head']}
                 title="Master Key"
-              />
+              /> */}
               <CollapseItems
                 icon={<BalanceIcon />}
                 items={['Customer List', 'Customer Account List']}
