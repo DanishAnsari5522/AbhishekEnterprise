@@ -13,15 +13,13 @@ export default function AddItem() {
     const handleSubmit = async () => {
         console.log("Befor Api");
 
-        console.table(productName, gst)
-
         if (!productName) {
             setError("ProductName Required");
         } else if (!gst) {
             setError("gst Required");
         } else {
 
-            let result = await fetch('http://192.168.1.2:5000/v1/item/addItem', {
+            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addItem', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

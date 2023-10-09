@@ -10,41 +10,23 @@ export default function AddMaterial() {
     const [unit, setUnit] = useState('');
     const [materialType, setMaterialType] = useState('');
     const [error, setError] = useState('');
+    const [productName, setProductName] = useState('Select Item');
+    const [company, setCompany] = useState('Select Item');
+    const [size, setSize] = useState('Select Item');
+
+
+
     const router = useRouter();
-
-
-
-    const [productName, setProductName] = React.useState(new Set([`Product Name >`]));
-
-    const selectedProduct = React.useMemo(
-        () => Array.from(productName).join(", ").replaceAll("_", " "),
-        [productName]
-    );
-
-    const [company, setCompany] = React.useState(new Set(["Company > "]));
-
-    const selectedCompany = React.useMemo(
-        () => Array.from(company).join(", ").replaceAll("_", " "),
-        [company]
-    );
-
-
-    const [size, setSize] = React.useState(new Set(["Size >"]));
-
-    const selectedSize = React.useMemo(
-        () => Array.from(size).join(", ").replaceAll("_", " "),
-        [size]
-    );
 
 
     const handleSubmit = async () => {
         console.log("Befor Api");
 
-        if ((selectedProduct == `Product Name >`)) {
+        if ((productName == `Select Item`)) {
             setError("ProductName Required");
-        } else if ((selectedCompany == "Company > ")) {
+        } else if ((company == `Select Item`)) {
             setError("company Required");
-        } else if ((selectedSize == "Size >")) {
+        } else if ((size == `Select Item`)) {
             setError("size Required");
         } else if (!materialType) {
             setError("materialType Required");
@@ -52,12 +34,12 @@ export default function AddMaterial() {
             setError("Unit Required");
         } else {
 
-            let result = await fetch('http://192.168.1.2:5000/v1/item/addMaterial', {
+            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addMaterial', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: selectedProduct, company: selectedCompany, size: selectedSize, materialType: materialType, unit: unit })
+                body: JSON.stringify({ name: productName, company: company, size: size, materialType: materialType, unit: unit })
             }).then(res => res.json()).then(
                 async data => {
                     if (data.success == false) {
@@ -84,86 +66,41 @@ export default function AddMaterial() {
                         <div className='absolute  top-0 right-0'>Link</div>
 
                         <div className='ml-3'>
-                            <Dropdown>
-                                <DropdownTrigger>
-                                    <Button
-                                        variant="bordered"
-                                        className="capitalize"
-                                    >
-                                        {selectedProduct}
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    aria-label="Single selection example"
-                                    variant="flat"
-                                    disallowEmptySelection
-                                    selectionMode="single"
-                                    selectedKeys={productName}
-                                    onSelectionChange={setProductName}
-                                >
-                                    <DropdownItem key="text">Text</DropdownItem>
-                                    <DropdownItem key="number">Number</DropdownItem>
-                                    <DropdownItem key="date">Date</DropdownItem>
-                                    <DropdownItem key="single_date">Single Date</DropdownItem>
-                                    <DropdownItem key="iteration">Iteration</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <select name="cars" id="cars" onChange={event => setProductName(event.target.value)}
+                                defaultValue={productName}
+                                style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+                            >
+                                <option>Select Item</option>
+                                <option value="saab">Saab</option>
+                                <option value="opel">Opel</option>
+                                <option value="audi">Audi</option>
+                            </select>
                         </div>
 
 
                         <div className='ml-4'>
-                            <Dropdown >
-                                <DropdownTrigger>
-                                    <Button
-                                        variant="bordered"
-                                        className="capitalize"
-                                    >
-                                        {selectedCompany}
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    aria-label="Single selection example"
-                                    variant="flat"
-                                    disallowEmptySelection
-                                    selectionMode="single"
-                                    selectedKeys={company}
-                                    onSelectionChange={setCompany}
-                                >
-                                    <DropdownItem key="text">Text</DropdownItem>
-                                    <DropdownItem key="number">Number</DropdownItem>
-                                    <DropdownItem key="date">Date</DropdownItem>
-                                    <DropdownItem key="single_date">Single Date</DropdownItem>
-                                    <DropdownItem key="iteration">Iteration</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                             <select name="cars" id="cars" onChange={event => setCompany(event.target.value)}
+                                defaultValue={company}
+                                style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+                            >
+                                <option>Select Item</option>
+                                <option value="saab">Saab</option>
+                                <option value="opel">Opel</option>
+                                <option value="audi">Audi</option>
+                            </select>
                         </div>
 
 
                         <div className='ml-4'>
-                            <Dropdown>
-                                <DropdownTrigger>
-                                    <Button
-                                        variant="bordered"
-                                        className="capitalize"
-                                    >
-                                        {selectedSize}
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    aria-label="Single selection example"
-                                    variant="flat"
-                                    disallowEmptySelection
-                                    selectionMode="single"
-                                    selectedKeys={size}
-                                    onSelectionChange={setSize}
-                                >
-                                    <DropdownItem key="text">Text</DropdownItem>
-                                    <DropdownItem key="number">Number</DropdownItem>
-                                    <DropdownItem key="date">Date</DropdownItem>
-                                    <DropdownItem key="single_date">Single Date</DropdownItem>
-                                    <DropdownItem key="iteration">Iteration</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <select name="cars" id="cars" onChange={event => setSize(event.target.value)}
+                                defaultValue={size}
+                                style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+                            >
+                                <option>Select Item</option>
+                                <option value="saab">Saab</option>
+                                <option value="opel">Opel</option>
+                                <option value="audi">Audi</option>
+                            </select>
 
                         </div>
                         <Input

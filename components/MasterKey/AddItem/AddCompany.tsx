@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { TableWrapper } from '../../table/table';
-import BusinessTable from '../../businesss/businessTable/Index';
 import { Input, Button } from "@nextui-org/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@nextui-org/react";
 import CompanyTable from './companyTable/CompanyTable';
@@ -13,18 +11,14 @@ export default function AddCompany() {
     const [size, setSize] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
-
-    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Select Item >"]));
-
-    const selectedValue = React.useMemo(
-        () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
-        [selectedKeys]
-    );
+    const [value, setValue] = useState('Select Item');
 
     const handleSubmit = async () => {
+        console.log(value);
+
         console.log("Befor Api");
 
-        if ((selectedValue == "Select Item >")) {
+        if ((value == "Select Item")) {
             setError("selectedValue Required");
         } else if (!company) {
             setError("company Required");
@@ -32,12 +26,12 @@ export default function AddCompany() {
             setError("size Required");
         } else {
 
-            let result = await fetch('http://192.168.1.2:5000/v1/item/addCompany', {
+            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addCompany', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ productName: selectedValue, companyName: company, size })
+                body: JSON.stringify({ productName: value, companyName: company, size })
             }).then(res => res.json()).then(
                 async data => {
                     if (data.success == false) {
@@ -63,31 +57,15 @@ export default function AddCompany() {
                     <div className='h-[100px] bg-white my-2 flex px-3 items-center bt-1'>
                         <div className='absolute  top-0 right-0'>Link</div>
 
-
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button
-                                    variant="bordered"
-                                    className="capitalize"
-                                >
-                                    {selectedValue}
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu
-                                aria-label="Single selection example"
-                                variant="flat"
-                                disallowEmptySelection
-                                selectionMode="single"
-                                selectedKeys={selectedKeys}
-                                onSelectionChange={setSelectedKeys}
-                            >
-                                <DropdownItem key="text">Text</DropdownItem>
-                                <DropdownItem key="number">Number</DropdownItem>
-                                <DropdownItem key="date">Date</DropdownItem>
-                                <DropdownItem key="single_date">Single Date</DropdownItem>
-                                <DropdownItem key="iteration">Iteration</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <select name="cars" id="cars" onChange={event => setValue(event.target.value)}
+                            defaultValue={value}
+                            style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+                        >
+                            <option>Select Item</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                        </select>
 
                         <Input
                             isClearable

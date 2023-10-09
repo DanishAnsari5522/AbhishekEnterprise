@@ -9,7 +9,7 @@ export default function MaterialTable() {
     const getBusiness = async () => {
         console.log("Befor Api");
 
-        let result = await fetch('http://192.168.1.2:5000/v1/item/getAllMaterial', {
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/getAllMaterial', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
