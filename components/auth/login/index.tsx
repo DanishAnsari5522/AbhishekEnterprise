@@ -63,7 +63,7 @@ const LoginComp = () => {
                                     <button className="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" onClick={loginButton}>
                                         Log in
                                     </button>
-                                    <p className="mt-4">
+                                    {/* <p className="mt-4">
                                         <Link className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="/forgot_password">
                                             Forgot your password?
                                         </Link>
@@ -72,7 +72,7 @@ const LoginComp = () => {
                                         <Link href='/auth/signup'>
                                             Create account
                                         </Link>
-                                    </p>
+                                    </p> */}
                                 </div>
                             </div>
                         </div>
