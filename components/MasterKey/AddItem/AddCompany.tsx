@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, user } from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@nextui-org/react";
 import CompanyTable from './companyTable/CompanyTable';
 import { useRouter } from 'next/router';
@@ -88,8 +88,8 @@ export default function AddCompany() {
                         >
                             <option className='font-medium'>Select Product</option>
                             {
-                                users.map((value) => (
-                                    <option>{value['name']}</option>
+                                users.map((value,index) => (
+                                    <option key={index}>{value['name']}</option>
                                 ))
                             }
                         </select>

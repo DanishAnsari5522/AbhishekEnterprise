@@ -1,8 +1,8 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import AddItem from '../../../../components/MasterKey/AddItem';
 import { useRouter } from 'next/router';
 
-export default function addItem() {
+export default function AddItems() {
     const router = useRouter()
     useEffect(() => {
         let auth1 = localStorage.getItem('user');

@@ -100,8 +100,6 @@ export default function AddMaterial() {
     useEffect(() => {
         getProduct()
         getCompany();
-        console.log(productName);
-
     }, [])
 
     return (
@@ -120,8 +118,8 @@ export default function AddMaterial() {
                             >
                                 <option className='font-medium'>Select Product</option>
                                 {
-                                    users.map((value) => (
-                                        <option> {value['name']}</option>
+                                    users.map((value, index) => (
+                                        <option key={index}> {value['name']}</option>
                                     ))
                                 }
                             </select>

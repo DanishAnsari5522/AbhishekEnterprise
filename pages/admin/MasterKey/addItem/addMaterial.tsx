@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react';
 import AddMaterial from '../../../../components/MasterKey/AddItem/AddMaterial';
 import { useRouter } from 'next/router';
-export default function addMaterial() {
+export default function AddMaterials() {
     const router = useRouter()
     useEffect(() => {
         let auth1 = localStorage.getItem('user');

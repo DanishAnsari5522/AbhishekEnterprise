@@ -83,5 +83,3 @@ export default function CompanyTable() {
     );
 }
 
-{/* <TableRow key='action'>{item}</TableRow> */ }
-
