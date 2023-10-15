@@ -69,6 +69,8 @@ export default function ItemTable() {
             <TableHeader>
                 <TableColumn key="name">NAME</TableColumn>
                 <TableColumn key="gst">GST</TableColumn>
+                <TableColumn key="HSNCode">HSN Code</TableColumn>
+
                 {/* <TableColumn key="size">size</TableColumn>
                 <TableColumn key="materialType">materialType</TableColumn>
                 <TableColumn key="unit">unit</TableColumn>
@@ -79,6 +81,8 @@ export default function ItemTable() {
                 {(item) => (
                     <TableRow key={1}>
                         {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+
+                        {/* {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>} */}
                     </TableRow>
                 )}
             </TableBody>

@@ -16,12 +16,12 @@ const LoginComp = () => {
             setInformationText("Password Required");
         }
         console.log("match");
-        let result = await fetch('https://frytx-backend.onrender.com/v1/user/login', {
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ phone, password })
+            body: JSON.stringify({ email: phone, password })
         }).then(res => res.json()).then(
             async data => {
                 // console.log(data.data);
@@ -53,8 +53,8 @@ const LoginComp = () => {
                                     </h1>
                                     <p className='text-red-600'>{informationText}</p>
                                     <label className="block text-sm">
-                                        <span className="text-gray-700 dark:text-gray-400">Phone</span>
-                                        <input value={phone} onChange={(e) => { setPhone(e.target.value) }} maxLength={10} className="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" placeholder="Phone" />
+                                        <span className="text-gray-700 dark:text-gray-400">Email</span>
+                                        <input value={phone} onChange={(e) => { setPhone(e.target.value) }} className="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" placeholder="email" />
                                     </label>
                                     <label className="block mt-4 text-sm">
                                         <span className="text-gray-700 dark:text-gray-400">Password</span>

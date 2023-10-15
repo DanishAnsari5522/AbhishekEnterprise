@@ -8,6 +8,7 @@ export default function AddItem() {
     const router = useRouter()
     const [productName, setProductName] = useState('');
     const [gst, setGst] = useState('');
+    const [hsnCode, setHsnCode] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async () => {
@@ -17,6 +18,8 @@ export default function AddItem() {
             setError("ProductName Required");
         } else if (!gst) {
             setError("gst Required");
+        } else if (!hsnCode) {
+            setError("HSN Code Required");
         } else {
 
             let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addItem', {
@@ -24,7 +27,7 @@ export default function AddItem() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: productName, gst })
+                body: JSON.stringify({ name: productName, gst, HSNCode: hsnCode })
             }).then(res => res.json()).then(
                 async data => {
                     if (data.success == false) {
@@ -43,7 +46,6 @@ export default function AddItem() {
         <>
             <div className='bg-gray-50'>
                 <div className='text-center text-3xl font-medium py-4'>Add Item</div>
-
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
                     <div className='h-[100px] bg-white my-2 flex px-3 items-center bt-1'>
@@ -63,6 +65,15 @@ export default function AddItem() {
                             variant="bordered"
                             value={gst}
                             onChange={(e) => { setGst(e.target.value) }}
+                        />
+
+                        <Input
+                            isClearable
+                            className="w-[150px] sm:max-w-[44%] ml-4"
+                            placeholder="HSN Code"
+                            variant="bordered"
+                            value={hsnCode}
+                            onChange={(e) => { setHsnCode(e.target.value) }}
                         />
 
                         <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
