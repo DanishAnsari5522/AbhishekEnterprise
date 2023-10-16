@@ -3,7 +3,9 @@ import { Input, Button } from "@nextui-org/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@nextui-org/react";
 import CompanyTable from './companyTable/CompanyTable';
 import { useRouter } from 'next/router';
+import { Chip } from "@nextui-org/react";
 
+const initialFruits = ["Hii"]
 
 
 export default function AddCompany() {
@@ -15,36 +17,68 @@ export default function AddCompany() {
     const [users, setUsers] = useState([]);
 
 
+
+    // Chip Start
+    const [fruits, setFruits] = useState(['']);
+
+    const InsertCompany = () => {
+        initialFruits.push(company)
+        // setFruits([...fruits, company])
+        fruits.push(company)
+        // console.log(company);
+        // console.log(initialFruits);
+        // console.log(fruits);
+        setCompany('')
+    }
+
+
+    const handleClose = (fruitToRemove: any) => {
+        setFruits(fruits.filter(fruit => fruit !== fruitToRemove));
+        // if (fruits.length === 1) {
+        //     setFruits(initialFruits);
+        // }
+
+        console.log("after Remove the item", fruits);
+    };
+    // chip End
+
+
     const handleSubmit = async () => {
         console.log(value);
 
         console.log("Befor Api");
 
+
+
         if ((value == "Select Product")) {
             setError("selected Product Required");
-        } else if (!company) {
+        } else if (fruits.length < 1) {
             setError("company Required");
         } else if (!size) {
             setError("size Required");
         } else {
 
-            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addCompany', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productName: value, companyName: company, size })
-            }).then(res => res.json()).then(
-                async data => {
-                    if (data.success == false) {
-                        console.log("Error");
-                    } else if (data.success == true) {
-                        console.log("Hello");
-                        router.reload();
-
+            fruits.map(async (val, index) => {
+                let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addCompany', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productName: value, companyName: val, size })
+                }).then(res => res.json()).then(
+                    async data => {
+                        if (data.success == false) {
+                            console.log("Error");
+                        } else if (data.success == true) {
+                            console.log("Hello");
+                            // router.reload();
+                        }
                     }
+                )
+                if (fruits.length == index + 1) {
+                    router.reload();
                 }
-            )
+            })
         }
     }
 
@@ -88,25 +122,38 @@ export default function AddCompany() {
                         >
                             <option className='font-medium'>Select Product</option>
                             {
-                                users.map((value,index) => (
+                                users.map((value, index) => (
                                     <option key={index}>{value['name']}</option>
                                 ))
                             }
                         </select>
 
-                        <Input
-                            isClearable
-                            className="w-[150px] sm:max-w-[44%] ml-4"
-                            placeholder="Company"
-                            variant="bordered"
-                            value={company}
-                            onChange={(e) => { setCompany(e.target.value) }}
+                        <div className='flex flex-col h-10'>
+                            <div className='flex'>
+                                <Input
+                                    isClearable
+                                    className="w-[150px] sm:max-w-[44%] ml-4"
+                                    placeholder="Company"
+                                    variant="bordered"
+                                    value={company}
+                                    onChange={(e) => { setCompany(e.target.value) }}
 
-                        />
+                                />
 
-                        <Button color="success" className='text-white ml-2'>
-                            Insert Company
-                        </Button>
+                                <Button color="success" className='text-white ml-2' onClick={InsertCompany}>
+                                    Insert Company
+                                </Button>
+                            </div>
+                            <div className='pt-1'>
+                                <div className="flex gap-2">
+                                    {fruits.map((fruit, index) => (
+                                        <Chip key={index} onClose={() => handleClose(fruit)} variant="flat">
+                                            {fruit}
+                                        </Chip>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
 
                         <Input
                             isClearable
