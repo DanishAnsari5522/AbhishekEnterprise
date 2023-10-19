@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import AddItem from '../../../../components/MasterKey/AddItem';
+import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
+import Supplier from "../../../components/supplier";
 
-export default function AddItems() {
+const SupplierR = () => {
     const router = useRouter()
     useEffect(() => {
         let auth1 = localStorage.getItem('user');
@@ -11,8 +11,10 @@ export default function AddItems() {
         }
     })
     return (
-        <div>
-            <AddItem />
-        </div>
+        <>
+            <Supplier />
+        </>
     )
 }
+
+export default SupplierR;

@@ -36,10 +36,7 @@ export const SidebarWrapper = () => {
   useEffect(() => {
     let auth1 = localStorage.getItem('user');
     if (auth1) {
-      console.log(JSON.parse(auth1).data['type']);
-      if (JSON.parse(auth1).data['phone'] === 9262786676) {
-        setAuth(true);
-      }
+      setAuth(true);
     }
   })
 
@@ -129,10 +126,10 @@ export const SidebarWrapper = () => {
                 title="Customer"
               />
               <SidebarItem
-                isActive={router.pathname === '/admin/Supplier'}
+                isActive={router.pathname === '/admin/supplier'}
                 title="Supplier"
                 icon={<AccountsIcon />}
-                href={auth ? "/admin/business" : "/"}
+                href={"/admin/supplier"}
               />
               <SidebarItem
                 isActive={router.pathname === '/admin/Purchase'}
