@@ -9,7 +9,7 @@ export default function SupplierTable() {
     const getBusiness = async () => {
         console.log("Befor Api");
 
-        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/getAllItem', {
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/supplier/getAllSupplier', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ export default function SupplierTable() {
 
 
 
-    const rowsPerPage = 5;
+    const rowsPerPage = 10;
 
     const pages = Math.ceil(users.length / rowsPerPage);
 
@@ -67,22 +67,19 @@ export default function SupplierTable() {
             }}
         >
             <TableHeader>
-                <TableColumn key="name">NAME</TableColumn>
-                <TableColumn key="gst">GST</TableColumn>
-                <TableColumn key="HSNCode">HSN Code</TableColumn>
-
-                {/* <TableColumn key="size">size</TableColumn>
-                <TableColumn key="materialType">materialType</TableColumn>
-                <TableColumn key="unit">unit</TableColumn>
-                <TableColumn key="action">Action</TableColumn> */}
+                <TableColumn key="firmName">FIRM NAME</TableColumn>
+                <TableColumn key="partyName">NAME OF PARTY</TableColumn>
+                <TableColumn key="location">ADDRESS</TableColumn>
+                <TableColumn key="state">STATE</TableColumn>
+                <TableColumn key="gst">GSTIN</TableColumn>
+                <TableColumn key="mobile">MOBILE NO.</TableColumn>
+                <TableColumn key="action">Action</TableColumn>
 
             </TableHeader>
             <TableBody items={items}>
                 {(item) => (
                     <TableRow key={1}>
                         {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-
-                        {/* {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>} */}
                     </TableRow>
                 )}
             </TableBody>
