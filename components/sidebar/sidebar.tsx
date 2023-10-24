@@ -132,10 +132,10 @@ export const SidebarWrapper = () => {
                 href={"/admin/supplier"}
               />
               <SidebarItem
-                isActive={router.pathname === '/admin/Purchase'}
+                isActive={router.pathname === '/admin/purchase'}
                 title="Purchase"
                 icon={<BalanceIcon />}
-                href={auth ? "/admin/business" : "/"}
+                href={"/admin/purchase"}
               />
               <SidebarItem
                 isActive={router.pathname === '/admin/business'}

@@ -25,9 +25,6 @@ export default function AddCompany() {
         initialFruits.push(company)
         // setFruits([...fruits, company])
         fruits.push(company)
-        // console.log(company);
-        // console.log(initialFruits);
-        // console.log(fruits);
         setCompany('')
     }
 
