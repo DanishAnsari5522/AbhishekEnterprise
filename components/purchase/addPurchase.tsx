@@ -98,7 +98,7 @@ export default function AddPurchase() {
     }
 
     const getPurchase = async () => {
-        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/getAllItem', {
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/supplier/getAllSupplier', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -184,7 +184,7 @@ export default function AddPurchase() {
                             <option className='font-medium'>Select Product</option>
                             {
                                 users.map((value, index) => (
-                                    <option key={index}>{value['name']}</option>
+                                    <option key={index}>{value['firmName']}</option>
                                 ))
                             }
                         </select>
