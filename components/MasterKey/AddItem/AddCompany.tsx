@@ -23,21 +23,31 @@ export default function AddCompany() {
 
     const InsertCompany = () => {
         initialFruits.push(company)
-        // setFruits([...fruits, company])
         fruits.push(company)
         setCompany('')
     }
 
-
     const handleClose = (fruitToRemove: any) => {
         setFruits(fruits.filter(fruit => fruit !== fruitToRemove));
-        // if (fruits.length === 1) {
-        //     setFruits(initialFruits);
-        // }
-
         console.log("after Remove the item", fruits);
     };
     // chip End
+
+
+    // Size Chip Start
+    const [sizeChip, setSizeChip] = useState(['']);
+
+    const InsertSize = () => {
+        initialFruits.push(size)
+        sizeChip.push(size)
+        setSize('')
+    }
+
+    const handleCloseSize = (sizeToRemove: any) => {
+        setSizeChip(sizeChip.filter(fruit => fruit !== sizeToRemove));
+        console.log("after Remove the item", fruits);
+    };
+    //Size chip End
 
 
     const handleSubmit = async () => {
@@ -45,36 +55,38 @@ export default function AddCompany() {
 
         console.log("Befor Api");
 
-
-
         if ((value == "Select Product")) {
             setError("selected Product Required");
         } else if (fruits.length < 1) {
             setError("company Required");
-        } else if (!size) {
+        } else if (sizeChip.length < 1) {
             setError("size Required");
         } else {
 
             fruits.map(async (val, index) => {
-                let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addCompany', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ productName: value, companyName: val, size })
-                }).then(res => res.json()).then(
-                    async data => {
-                        if (data.success == false) {
-                            console.log("Error");
-                        } else if (data.success == true) {
-                            console.log("Hello");
-                            // router.reload();
+                sizeChip.map(async (sizeval, sizeind) => {
+                    let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addCompany', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productName: value, companyName: val, size: sizeval })
+                    }).then(res => res.json()).then(
+                        async data => {
+                            if (data.success == false) {
+                                console.log("Error");
+                            } else if (data.success == true) {
+                                console.log("Hello");
+                                // router.reload();
+                            }
                         }
+                    )
+                    if (fruits.length == index + 1) {
+                        router.reload();
                     }
-                )
-                if (fruits.length == index + 1) {
-                    router.reload();
-                }
+
+                })
+
             })
         }
     }
@@ -152,14 +164,32 @@ export default function AddCompany() {
                             </div>
                         </div>
 
-                        <Input
-                            isClearable
-                            className="w-[150px] sm:max-w-[44%] ml-4 b"
-                            placeholder="Size"
-                            variant="bordered"
-                            value={size}
-                            onChange={(e) => { setSize(e.target.value) }}
-                        />
+                        <div className='flex flex-col h-10'>
+                            <div className='flex'>
+                                <Input
+                                    isClearable
+                                    className="w-[150px] sm:max-w-[44%] ml-4"
+                                    placeholder="Size"
+                                    variant="bordered"
+                                    value={size}
+                                    onChange={(e) => { setSize(e.target.value) }}
+
+                                />
+
+                                <Button color="success" className='text-white ml-2' onClick={InsertSize}>
+                                    Insert Size
+                                </Button>
+                            </div>
+                            <div className='pt-1'>
+                                <div className="flex gap-2">
+                                    {sizeChip.map((size, index) => (
+                                        <Chip key={index} onClose={() => handleCloseSize(size)} variant="flat">
+                                            {size}
+                                        </Chip>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
 
 
                         <Button color="success" className='text-white ml-4' size='md' onClick={handleSubmit}>

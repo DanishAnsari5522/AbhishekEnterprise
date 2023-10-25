@@ -20,6 +20,8 @@ export default function ItemTable() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
+                    var data1 = data.message.reverse();
+                    // console.log(data1);
                     setUsers(data.message);
                 }
             }
@@ -35,7 +37,7 @@ export default function ItemTable() {
 
 
 
-    const rowsPerPage = 5;
+    const rowsPerPage = 7;
 
     const pages = Math.ceil(users.length / rowsPerPage);
 

@@ -7,12 +7,13 @@ import { useRouter } from 'next/router';
 
 
 export default function AddMaterial() {
-    const [unit, setUnit] = useState('');
-    const [materialType, setMaterialType] = useState('');
     const [error, setError] = useState('');
     const [productName, setProductName] = useState('Select Product');
     const [company, setCompany] = useState('Select Company');
     const [size, setSize] = useState('Select size');
+    const [unit, setUnit] = useState('');
+    const [materialType, setMaterialType] = useState('');
+    const [rate, setRate] = useState('');
     // for dropdown
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
@@ -36,7 +37,9 @@ export default function AddMaterial() {
             setError("materialType Required");
         } else if (!unit) {
             setError("Unit Required");
-        } else {
+        }  else if (!rate) {
+            setError("rate Required");
+        }else {
 
             let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addMaterial', {
                 method: 'POST',
@@ -175,10 +178,19 @@ export default function AddMaterial() {
                         <Input
                             isClearable
                             className="w-[150px] sm:max-w-[44%] ml-4 b"
-                            placeholder="Rate/Unit"
+                            placeholder="Quantity"
                             variant="bordered"
                             value={unit}
                             onChange={(e) => { setUnit(e.target.value) }}
+                        />
+
+                        <Input
+                            isClearable
+                            className="w-[150px] sm:max-w-[44%] ml-4 b"
+                            placeholder="Rate"
+                            variant="bordered"
+                            value={rate}
+                            onChange={(e) => { setRate(e.target.value) }}
                         />
 
 
