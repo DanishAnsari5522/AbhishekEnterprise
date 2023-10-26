@@ -2,11 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button, Link } from "@nextui-org/react";
 import { useRouter } from 'next/router';
 import { RadioGroup, Radio } from "@nextui-org/react";
+import PurchaseListTable from './purchaseListTable';
+
+interface PurchaseItem {
+    date: string;
+    gstType: string;
+    invoiceNo: string;
+    value: string;
+    address: string;
+    recieverName: string;
+    productName: string;
+    company: string;
+    size: string;
+    material: string;
+    hsnCode: string;
+    uom: string;
+    rate: string;
+    qty: string;
+}
+
+
 
 
 export default function AddPurchase() {
     const router = useRouter()
     const [error, setError] = useState('');
+    const [purchaseList, setPurchaseList] = useState<PurchaseItem[]>([]);
+    const [purchaseListData, setPurchaseListData] = useState([])
+
 
     // +++++++++++++++++++++++++++++++++++++++++ Select Start +++++++++++++++++++++++++++++++++++++++++++++
     const [unit, setUnit] = useState('');
@@ -36,15 +59,12 @@ export default function AddPurchase() {
     const [address, setAddress] = useState('add');
     const [recieverName, setRecieverName] = useState('');
     const [hsnCode, setHsnCode] = useState('');
+
     const [rate, setRate] = useState('');
     const [qty, setQty] = useState('');
     // +++++++++++++++++++++++++++++++++++++++++ UseSate ENd +++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-
-    const handleSubmit = async () => {
-        console.log("Befor Api");
+    const handleList = async () => {
 
         if (!date) {
             setError("date Required");
@@ -68,8 +88,6 @@ export default function AddPurchase() {
             setError("materialType Required");
         } else if (!hsnCode) {
             setError("hsnCode Required");
-        } else if (!location) {
-            setError("location Required");
         } else if (!uom) {
             setError("uom Required");
         } else if (!rate) {
@@ -77,23 +95,91 @@ export default function AddPurchase() {
         } else if (!qty) {
             setError("qty Required");
         } else {
+            const newpurchaseList = {
+                date: date,
+                gstType: gstType,
+                invoiceNo: invoiceNo,
+                value: value,
+                address: address,
+                recieverName: recieverName,
+                productName: productName,
+                company: company,
+                size: size,
+                material: material,
+                hsnCode: hsnCode,
+                uom: uom,
+                rate: rate,
+                qty: qty
+            }
+            console.log(purchaseList);
+            setPurchaseList([...purchaseList, newpurchaseList]);
+            localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
+            router.reload();
+        }
 
-            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/addPurchase', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ date, gstType, invoiceNo, supplierName: value, address, recieverName, product: productName, company, size, materialType: material, hsnCode, uom, rate, qty })
-            }).then(res => res.json()).then(
-                async data => {
-                    if (data.success == false) {
-                        console.log("Error");
-                    } else if (data.success == true) {
-                        console.log("Hello");
-                        router.reload();
-                    }
+    }
+
+
+
+
+    const handleSubmit = async () => {
+        console.log("Befor Api");
+        if (localStorage.getItem("PurchaseList")) {
+            const storedList = localStorage.getItem("PurchaseList");
+            let parsedList;
+            if (storedList) {
+                try {
+                    parsedList = JSON.parse(storedList);
+                    setPurchaseListData(parsedList);
+                } catch (error) {
+                    console.log(error);
+
                 }
-            )
+            }
+        }
+        if (purchaseListData.length < 1) {
+            alert("NO Data In purchase Table")
+        } else {
+            purchaseListData.map(async (val, ind) => {
+                console.log("Map Data");
+
+                console.log(val['data']);
+
+                let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/addPurchase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        date: (val['date']),
+                        gstType: (val['gstType']),
+                        invoiceNo: (val['invoiceNo']),
+                        supplierName: (val['value']),
+                        address: (val['address']),
+                        recieverName: (val['recieverName']),
+                        product: (val['productName']),
+                        company: (val['company']),
+                        size: (val['size']),
+                        materialType: (val['material']),
+                        hsnCode: (val['hsnCode']),
+                        uom: (val['uom']),
+                        rate: (val['rate']),
+                        qty: (val['qty']),
+                    })
+                }).then(res => res.json()).then(
+                    async data => {
+                        if (data.success == false) {
+                            console.log("Error");
+                        } else if (data.success == true) {
+                            console.log("Hello");
+                        }
+                    }
+                )
+                if (purchaseListData.length == ind + 1) {
+                    localStorage.removeItem("PurchaseList");
+                    router.push('/admin/purchase');
+                }
+            })
         }
     }
 
@@ -138,6 +224,22 @@ export default function AddPurchase() {
     useEffect(() => {
         getPurchase();
         getCompany();
+
+        if (localStorage.getItem("PurchaseList")) {
+            // const storedList = JSON.parse(localStorage.getItem("PurchaseList"));
+            // setPurchaseList(storedList);
+            const storedList = localStorage.getItem("PurchaseList");
+            let parsedList;
+            if (storedList) {
+                try {
+                    parsedList = JSON.parse(storedList);
+                    setPurchaseListData(parsedList);
+                } catch (error) {
+                    console.log(error);
+
+                }
+            }
+        }
     }, [])
 
 
@@ -289,16 +391,6 @@ export default function AddPurchase() {
                                 <option className='font-medium'>Select UOM</option>
                                 <option className='font-medium'>UOM1</option>
                                 <option className='font-medium'>UOM2</option>
-
-                                {/* {
-                                    companyData.map((value) => (
-                                        <>
-                                            {
-                                                value['productName'] == productName && <option>{value['size']}</option>
-                                            }
-                                        </>
-                                    ))
-                                } */}
                             </select>
 
                             <Input
@@ -324,12 +416,17 @@ export default function AddPurchase() {
 
 
 
-                    <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
+                    <Button color="success" className='text-white ml-2' onClick={handleList}>
                         Add
                     </Button>
                 </div>
 
-                {/* <SupplierTable /> */}
+                <PurchaseListTable />
+
+
+                <Button color="success" className='text-white ml-2  justify-items-end' onClick={handleSubmit}>
+                    Save
+                </Button>
 
             </div>
         </>
