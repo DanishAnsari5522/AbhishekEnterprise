@@ -37,16 +37,16 @@ export default function AddMaterial() {
             setError("materialType Required");
         } else if (!unit) {
             setError("Unit Required");
-        }  else if (!rate) {
+        } else if (!rate) {
             setError("rate Required");
-        }else {
+        } else {
 
             let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addMaterial', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: productName, company: company, size: size, materialType: materialType, unit: unit })
+                body: JSON.stringify({ name: productName, company: company, size: size, materialType: materialType, unit: unit, rate })
             }).then(res => res.json()).then(
                 async data => {
                     if (data.success == false) {
@@ -108,7 +108,13 @@ export default function AddMaterial() {
     return (
         <>
             <div className='bg-gray-50'>
-                <div className='text-center text-3xl font-medium py-4'>Materials</div>
+                <div className='justify-items-end text-end flex flex-row justify-between py-4'>
+                    <div></div>
+                    <div className='text-center text-3xl font-medium '>Materials</div>
+                    <Button color="danger" onClick={() => { router.push('/admin/MasterKey/addItem/addCompany') }}>
+                        Back
+                    </Button>
+                </div>
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
                     <div className='h-[100px] bg-white my-2 flex px-3 items-center bt-1'>
@@ -158,7 +164,7 @@ export default function AddMaterial() {
                                     companyData.map((value) => (
                                         <>
                                             {
-                                                value['productName'] == productName && <option>{value['size']}</option>
+                                                value['companyName'] == company && <option>{value['size']}</option>
                                             }
                                         </>
                                     ))
@@ -200,7 +206,6 @@ export default function AddMaterial() {
 
                     </div>
 
-                    {/* <MaterialTable /> */}
                     <MaterialTable />
                 </div>
             </div >

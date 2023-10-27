@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
+import { EditIcon } from "../../../icons/table/edit-icon";
+import { DeleteIcon } from "../../../icons/table/delete-icon";
+
 
 export default function ItemTable() {
     const [page, setPage] = React.useState(1);
@@ -23,6 +26,28 @@ export default function ItemTable() {
                     var data1 = data.message.reverse();
                     // console.log(data1);
                     setUsers(data.message);
+                }
+            }
+        )
+    }
+
+    const deleteItem = async (id: any) => {
+        console.log("Befor Api");
+        console.log(id);
+        alert('Are You sure you want to delete this record..?')
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/deleteItem?id=${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    getBusiness();
                 }
             }
         )
@@ -72,25 +97,33 @@ export default function ItemTable() {
                 <TableColumn key="name">NAME</TableColumn>
                 <TableColumn key="gst">GST</TableColumn>
                 <TableColumn key="HSNCode">HSN Code</TableColumn>
-
-                {/* <TableColumn key="size">size</TableColumn>
-                <TableColumn key="materialType">materialType</TableColumn>
-                <TableColumn key="unit">unit</TableColumn>
-                <TableColumn key="action">Action</TableColumn> */}
+                <TableColumn key="uom">UOM</TableColumn>
+                <TableColumn key="action">Action</TableColumn>
 
             </TableHeader>
             <TableBody items={items}>
                 {(item) => (
                     <TableRow key={1}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-
-                        {/* {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>} */}
+                        <TableCell>{getKeyValue(item, 'name')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'gst')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'HSNCode')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'uom')}</TableCell>
+                        <TableCell className="flex flex-row gap-2">
+                            <Tooltip content="Edit user">
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                    <EditIcon />
+                                </span>
+                            </Tooltip>
+                            <Tooltip color="danger" content="Delete user" onClick={() => { alert('Delete') }}>
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { deleteItem(item['_id']) }}>
+                                    <DeleteIcon />
+                                </span>
+                            </Tooltip>
+                        </TableCell>
                     </TableRow>
                 )}
             </TableBody>
         </Table>
     );
 }
-
-{/* <TableRow key='action'>{item}</TableRow> */ }
 

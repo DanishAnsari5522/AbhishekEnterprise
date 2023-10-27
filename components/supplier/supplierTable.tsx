@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
+import { DeleteIcon } from "../icons/table/delete-icon";
+import { EditIcon } from "../icons/table/edit-icon";
 
 export default function SupplierTable() {
     const [page, setPage] = React.useState(1);
@@ -26,6 +28,27 @@ export default function SupplierTable() {
         )
     }
 
+    const deleteSupplier = async (id: any) => {
+        console.log("Befor Api");
+        console.log(id);
+        alert('Are You sure you want to delete this record..?')
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/supplier/deleteSupplier?id=${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    getBusiness();
+                }
+            }
+        )
+    }
 
     useEffect(() => {
         getBusiness();
@@ -79,13 +102,28 @@ export default function SupplierTable() {
             <TableBody items={items}>
                 {(item) => (
                     <TableRow key={1}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                        <TableCell>{getKeyValue(item, 'firmName')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'partyName')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'location')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'state')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'gst')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'mobile')}</TableCell>
+                        <TableCell className="flex flex-row gap-2">
+                            <Tooltip content="Edit user">
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                    <EditIcon />
+                                </span>
+                            </Tooltip>
+                            <Tooltip color="danger" content="Delete user" onClick={() => { alert('Delete') }}>
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { deleteSupplier(item['_id']) }}>
+                                    <DeleteIcon />
+                                </span>
+                            </Tooltip>
+                        </TableCell>
                     </TableRow>
                 )}
             </TableBody>
         </Table>
     );
 }
-
-{/* <TableRow key='action'>{item}</TableRow> */ }
 

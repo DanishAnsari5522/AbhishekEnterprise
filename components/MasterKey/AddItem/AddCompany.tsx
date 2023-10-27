@@ -5,6 +5,7 @@ import CompanyTable from './companyTable/CompanyTable';
 import { useRouter } from 'next/router';
 import { Chip } from "@nextui-org/react";
 
+
 const initialFruits = ["Hii"]
 
 
@@ -118,7 +119,13 @@ export default function AddCompany() {
     return (
         <>
             <div className='bg-gray-50'>
-                <div className='text-center text-3xl font-medium py-4'>Company</div>
+                <div className='justify-items-end text-end flex flex-row justify-between py-4'>
+                    <div></div>
+                    <div className='text-center text-3xl font-medium '>Company</div>
+                    <Button color="danger" onClick={() => { router.push('/admin/MasterKey/addItem') }}>
+                        Back
+                    </Button>
+                </div>
 
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
@@ -196,11 +203,9 @@ export default function AddCompany() {
                             Add
                         </Button>
 
-                        <Link href="/admin/MasterKey/addItem/addMaterial">
-                            <Button color="danger" className='ml-4'>
-                                Add Material
-                            </Button>
-                        </Link>
+                        <Button color="danger" className='ml-4' onClick={() => { router.push('/admin/MasterKey/addItem/addMaterial') }}>
+                            Add Material
+                        </Button>
 
                     </div>
 

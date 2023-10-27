@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
+import { DeleteIcon } from "../icons/table/delete-icon";
+import { EditIcon } from "../icons/table/edit-icon";
 
 export default function PurchaseListTable() {
     const [page, setPage] = React.useState(1);
@@ -9,10 +11,6 @@ export default function PurchaseListTable() {
     const getBusiness = async () => {
         console.log("Befor Api");
         if (localStorage.getItem("PurchaseList")) {
-            // const storedList = JSON.parse(localStorage.getItem("PurchaseList"));
-            // console.log("Data For id check" + JSON.stringify(storedList));
-            // setUsers(storedList);
-
             const storedList = localStorage.getItem("PurchaseList");
             let parsedList;
             if (storedList) {
@@ -25,6 +23,28 @@ export default function PurchaseListTable() {
                 }
             }
         }
+    }
+
+    const deletePurchase = async (id: any) => {
+        console.log("Befor Api");
+        console.log(id);
+        alert('Are You sure you want to delete this record..?')
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/deletePurchase?id=${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    getBusiness();
+                }
+            }
+        )
     }
 
 
@@ -81,7 +101,24 @@ export default function PurchaseListTable() {
             <TableBody items={items}>
                 {(item) => (
                     <TableRow key={1}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                        <TableCell>{getKeyValue(item, 'productName')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'hsnCode')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'uom')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'qty')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'gstType')}</TableCell>
+                        <TableCell className="flex flex-row gap-2">
+                            <Tooltip content="Edit user">
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                    <EditIcon />
+                                </span>
+                            </Tooltip>
+                            <Tooltip color="danger" content="Delete user" onClick={() => { alert('Delete') }}>
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { alert('delete under Process...') }}>
+                                    <DeleteIcon />
+                                </span>
+                            </Tooltip>
+                        </TableCell>
                     </TableRow>
                 )}
             </TableBody>

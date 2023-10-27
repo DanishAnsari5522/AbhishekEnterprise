@@ -98,7 +98,14 @@ export default function AddSupplier() {
     return (
         <>
             <div className='bg-gray-50'>
-                <div className='text-center text-3xl font-medium pt-4'>Purchase</div>
+                {/* <div className='text-center text-3xl font-medium pt-4'>Purchase</div> */}
+                <div className='justify-items-end text-end flex flex-row justify-between pt-4'>
+                    <div></div>
+                    <div className='text-center text-3xl font-medium '>Add Supplier</div>
+                    <Button color="danger" onClick={() => { router.push('/admin/supplier') }}>
+                        Back
+                    </Button>
+                </div>
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
                     <div className='p-4 mb-2 bg-white  gap-2 grid grid-cols-2 sm:grid-cols-3'>

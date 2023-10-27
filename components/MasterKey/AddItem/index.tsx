@@ -9,6 +9,7 @@ export default function AddItem() {
     const [productName, setProductName] = useState('');
     const [gst, setGst] = useState('');
     const [hsnCode, setHsnCode] = useState('');
+    const [uom, setUom] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async () => {
@@ -20,6 +21,8 @@ export default function AddItem() {
             setError("gst Required");
         } else if (!hsnCode) {
             setError("HSN Code Required");
+        } else if (!uom) {
+            setError("UOM Required");
         } else {
 
             let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/addItem', {
@@ -27,7 +30,7 @@ export default function AddItem() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: productName, gst, HSNCode: hsnCode })
+                body: JSON.stringify({ name: productName, gst, HSNCode: hsnCode, uom })
             }).then(res => res.json()).then(
                 async data => {
                     if (data.success == false) {
@@ -76,17 +79,22 @@ export default function AddItem() {
                             onChange={(e) => { setHsnCode(e.target.value) }}
                         />
 
+                        <Input
+                            isClearable
+                            className="w-[150px] sm:max-w-[44%] ml-4"
+                            placeholder="UOM"
+                            variant="bordered"
+                            value={uom}
+                            onChange={(e) => { setUom(e.target.value) }}
+                        />
+
                         <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
                             Add
                         </Button>
 
-                        <Link href="/admin/MasterKey/addItem/addCompany">
-                            <Button color="danger" className='ml-4'>
-                                Add Company
-                            </Button>
-                        </Link>
-
-
+                        <Button color="danger" className='ml-4' onClick={() => { router.push('/admin/MasterKey/addItem/addCompany') }}>
+                            Add Company
+                        </Button>
                     </div>
                 </div>
 

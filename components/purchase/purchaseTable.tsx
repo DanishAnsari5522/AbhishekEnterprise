@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
+import { EyeIcon } from "../icons/table/eye-icon";
 
 export default function PurchaseTable() {
     const [page, setPage] = React.useState(1);
@@ -72,13 +73,20 @@ export default function PurchaseTable() {
                 <TableColumn key="supplierName">Supplier Name</TableColumn>
                 <TableColumn key="address">Address</TableColumn>
                 <TableColumn key="rate">Gross Amt.</TableColumn>
-                <TableColumn key="mobile">	View Product</TableColumn>
+                <TableColumn key="action">View Product</TableColumn>
 
             </TableHeader>
             <TableBody items={items}>
                 {(item) => (
                     <TableRow key={1}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                        <TableCell>{getKeyValue(item, 'date')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'address')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
+                        <TableCell>
+                            <Button color="primary" size="sm">View</Button>
+                        </TableCell>
                     </TableRow>
                 )}
             </TableBody>
