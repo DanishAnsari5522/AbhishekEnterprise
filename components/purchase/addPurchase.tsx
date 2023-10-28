@@ -11,6 +11,8 @@ interface PurchaseItem {
     value: string;
     address: string;
     recieverName: string;
+    gstInvoiceNo: string;
+    gstInvoiceDate: string;
     productName: string;
     company: string;
     size: string;
@@ -32,8 +34,6 @@ export default function AddPurchase() {
 
 
     // +++++++++++++++++++++++++++++++++++++++++ Select Start +++++++++++++++++++++++++++++++++++++++++++++
-    const [unit, setUnit] = useState('');
-    const [materialType, setMaterialType] = useState('');
     const [productName, setProductName] = useState('Select Product');
     const [company, setCompany] = useState('Select Company');
     const [size, setSize] = useState('Select size');
@@ -51,7 +51,6 @@ export default function AddPurchase() {
 
     // +++++++++++++++++++++++++++++++++++++++++ select end +++++++++++++++++++++++++++++++++++++++++++++
 
-    const [selected, setSelected] = React.useState("london");
 
     // +++++++++++++++++++++++++++++++++++++++++ UseSate Start +++++++++++++++++++++++++++++++++++++++++++++
     const [date, setDate] = useState('');
@@ -72,7 +71,6 @@ export default function AddPurchase() {
     // +++++++++++++++++++++++++++++++++++++++++ UseSate ENd +++++++++++++++++++++++++++++++++++++++++++++++
 
     const handleList = async () => {
-        getlocalData();
         if (!invoiceNo) {
             setError("invoiceNo Required");
         } else if (!date) {
@@ -258,15 +256,7 @@ export default function AddPurchase() {
         )
     }
 
-    const getlocalData = () => {
-
-    }
-
-
-
-
     useEffect(() => {
-        getlocalData();
         getPurchase();
         getCompany();
         getAllItem();
@@ -277,7 +267,7 @@ export default function AddPurchase() {
             if (storedList) {
                 try {
                     parsedList = JSON.parse(storedList);
-                    setPurchaseListData(parsedList);
+                    setPurchaseList(parsedList);
                 } catch (error) {
                     console.log(error);
 
@@ -290,7 +280,6 @@ export default function AddPurchase() {
     return (
         <>
             <div className='bg-gray-50'>
-                {/* <div className='text-center text-3xl font-medium pt-4'>Purchase</div> */}
                 <div className='justify-items-end text-end flex flex-row justify-between pt-4'>
                     <div></div>
                     <div className='text-center text-3xl font-medium '>Add Purchase</div>
@@ -501,6 +490,7 @@ export default function AddPurchase() {
                                 variant="bordered"
                                 value={rate}
                                 onChange={(e) => { setRate(e.target.value) }}
+                                disabled
                             />
 
                             <Input
@@ -532,5 +522,6 @@ export default function AddPurchase() {
 
             </div >
         </>
+
     )
 }

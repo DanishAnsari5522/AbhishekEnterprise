@@ -88,7 +88,7 @@ export default function AddSupplier() {
                         console.log("Error");
                     } else if (data.success == true) {
                         console.log("Hello");
-                        router.reload();
+                        router.push('/admin/supplier');
                     }
                 }
             )
@@ -108,10 +108,10 @@ export default function AddSupplier() {
                 </div>
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
-                    <div className='p-4 mb-2 bg-white  gap-2 grid grid-cols-2 sm:grid-cols-3'>
+                    <div className='p-4 mb-2 bg-white  gap-4 grid grid-cols-2 sm:grid-cols-3'>
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Firm Name"
                             variant="bordered"
                             value={firmName}
@@ -120,7 +120,7 @@ export default function AddSupplier() {
 
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Party Name"
                             variant="bordered"
                             value={partyName}
@@ -129,7 +129,7 @@ export default function AddSupplier() {
 
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Gst No."
                             variant="bordered"
                             value={gst}
@@ -138,7 +138,7 @@ export default function AddSupplier() {
 
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Email Id"
                             variant="bordered"
                             value={email}
@@ -146,7 +146,7 @@ export default function AddSupplier() {
                         />
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Mobile No."
                             variant="bordered"
                             value={mobile}
@@ -154,7 +154,7 @@ export default function AddSupplier() {
                         />
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
+                            className="w-[100%] sm:max-w-[100%]"
                             placeholder="Whatsapp"
                             variant="bordered"
                             value={whatsapp}
@@ -163,8 +163,8 @@ export default function AddSupplier() {
 
                         <Input
                             isClearable
-                            className="w-[90%] sm:max-w-[100%]"
-                            placeholder="Other"
+                            className="w-[100%] sm:max-w-[100%] col-span-3"
+                            placeholder="Deal In"
                             variant="bordered"
                             value={other}
                             onChange={(e) => { setOther(e.target.value) }}
@@ -243,7 +243,7 @@ export default function AddSupplier() {
                         <Input
                             isClearable
                             className="w-[90%] sm:max-w-[100%]"
-                            placeholder="ifsc Code"
+                            placeholder="IFSC Code"
                             variant="bordered"
                             value={ifsc}
                             onChange={(e) => { setIfsc(e.target.value) }}
@@ -252,7 +252,7 @@ export default function AddSupplier() {
                         <Input
                             isClearable
                             className="w-[90%] sm:max-w-[100%]"
-                            placeholder="Other"
+                            placeholder="Phone Pay No."
                             variant="bordered"
                             value={bankOther}
                             onChange={(e) => { setBankOther(e.target.value) }}

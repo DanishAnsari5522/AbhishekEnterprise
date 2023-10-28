@@ -91,11 +91,11 @@ export default function SupplierTable() {
         >
             <TableHeader>
                 <TableColumn key="firmName">FIRM NAME</TableColumn>
-                <TableColumn key="partyName">NAME OF PARTY</TableColumn>
                 <TableColumn key="location">ADDRESS</TableColumn>
                 <TableColumn key="state">STATE</TableColumn>
                 <TableColumn key="gst">GSTIN</TableColumn>
                 <TableColumn key="mobile">MOBILE NO.</TableColumn>
+                <TableColumn key="bankOther">PHONE PAY NO.</TableColumn>
                 <TableColumn key="action">Action</TableColumn>
 
             </TableHeader>
@@ -103,11 +103,11 @@ export default function SupplierTable() {
                 {(item) => (
                     <TableRow key={1}>
                         <TableCell>{getKeyValue(item, 'firmName')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'partyName')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'location')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'city')}</TableCell>
                         <TableCell>{getKeyValue(item, 'state')}</TableCell>
                         <TableCell>{getKeyValue(item, 'gst')}</TableCell>
                         <TableCell>{getKeyValue(item, 'mobile')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'bankOther')}</TableCell>
                         <TableCell className="flex flex-row gap-2">
                             <Tooltip content="Edit user">
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
