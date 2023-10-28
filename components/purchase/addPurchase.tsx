@@ -41,7 +41,7 @@ export default function AddPurchase() {
 
 
 
-    const [value, setValue] = useState('Select Product');
+    const [value, setValue] = useState('Select Supplier');
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
     const [allItem, setAllItem] = useState([]);
@@ -72,14 +72,14 @@ export default function AddPurchase() {
     // +++++++++++++++++++++++++++++++++++++++++ UseSate ENd +++++++++++++++++++++++++++++++++++++++++++++++
 
     const handleList = async () => {
-
-        if (!date) {
+        getlocalData();
+        if (!invoiceNo) {
+            setError("invoiceNo Required");
+        } else if (!date) {
             setError("date Required");
         } else if (!gstType) {
             setError("gstType Required");
-        } else if (!invoiceNo) {
-            setError("invoiceNo Required");
-        } else if (!value) {
+        } else if (value == 'Select Supplier') {
             setError("SupplierName Required");
         } else if (!address) {
             setError("address Required");
@@ -89,11 +89,11 @@ export default function AddPurchase() {
             setError("gstInvoiceNo Required");
         } else if (!gstInvoiceDate) {
             setError("gstInvoiceDate Required");
-        } else if (!productName) {
+        } else if (productName == 'Select Product') {
             setError("productName Required");
-        } else if (!company) {
+        } else if (company == 'Select Company') {
             setError("company Required");
-        } else if (!size) {
+        } else if (size == 'Select size') {
             setError("size Required");
         } else if (material == `Select material`) {
             setError("materialType Required");
@@ -128,6 +128,8 @@ export default function AddPurchase() {
             setPurchaseList([...purchaseList, newpurchaseList]);
             localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
             router.reload();
+            console.log(purchaseList);
+
         }
 
     }
@@ -256,10 +258,15 @@ export default function AddPurchase() {
         )
     }
 
+    const getlocalData = () => {
+
+    }
+
 
 
 
     useEffect(() => {
+        getlocalData();
         getPurchase();
         getCompany();
         getAllItem();
@@ -294,6 +301,15 @@ export default function AddPurchase() {
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
                     <div className='p-4 mb-2 bg-white  gap-2 grid grid-cols-2 sm:grid-cols-4'>
+                        <Input
+                            isClearable
+                            className="w-[90%] sm:max-w-[100%]"
+                            placeholder="Invoice No."
+                            variant="bordered"
+                            value={invoiceNo}
+                            onChange={(e) => { setInvoiceNo(e.target.value) }}
+                        />
+
                         <input
                             type="date"
                             id="birthday"
@@ -313,14 +329,7 @@ export default function AddPurchase() {
                             <Radio value="igst">IGST</Radio>
                         </RadioGroup>
 
-                        <Input
-                            isClearable
-                            className="w-[90%] sm:max-w-[100%]"
-                            placeholder="Invoice No."
-                            variant="bordered"
-                            value={invoiceNo}
-                            onChange={(e) => { setInvoiceNo(e.target.value) }}
-                        />
+
 
 
                         <select name="cars" id="cars" onChange={event => {
@@ -336,7 +345,7 @@ export default function AddPurchase() {
                             defaultValue={value}
                             style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10, maxWidth: '200px' }}
                         >
-                            <option className='font-medium'>Select Product</option>
+                            <option className='font-medium'>Select Supplier</option>
                             {
                                 users.map((value1, index) => {
                                     if (value1[value]) {
