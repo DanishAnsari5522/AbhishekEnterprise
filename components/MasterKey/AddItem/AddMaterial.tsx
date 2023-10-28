@@ -127,9 +127,11 @@ export default function AddMaterial() {
                             >
                                 <option className='font-medium'>Select Product</option>
                                 {
-                                    users.map((value, index) => (
-                                        <option key={index}> {value['name']}</option>
-                                    ))
+                                    users.map((value, index) => {
+                                        return (
+                                            <option key={index}> {value['name']}</option>
+                                        )
+                                    })
                                 }
                             </select>
                         </div>
@@ -155,7 +157,7 @@ export default function AddMaterial() {
 
 
                         <div className='ml-4'>
-                            <select name="cars" id="cars" onChange={event => setSize(event.target.value)}
+                            <select name="cars" id="cars" onChange={event => { setSize(event.target.value) }}
                                 defaultValue={size}
                                 style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
                             >
@@ -164,7 +166,7 @@ export default function AddMaterial() {
                                     companyData.map((value) => (
                                         <>
                                             {
-                                                value['companyName'] == company && <option>{value['size']}</option>
+                                                value['productName'] == productName && value['companyName'] == company && <option>{value['size']}</option>
                                             }
                                         </>
                                     ))

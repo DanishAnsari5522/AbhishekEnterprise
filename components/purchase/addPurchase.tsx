@@ -44,8 +44,9 @@ export default function AddPurchase() {
     const [value, setValue] = useState('Select Product');
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
+    const [allItem, setAllItem] = useState([]);
 
-    const [uom, setUom] = useState('Select UOM');
+    const [uom, setUom] = useState('');
 
 
     // +++++++++++++++++++++++++++++++++++++++++ select end +++++++++++++++++++++++++++++++++++++++++++++
@@ -56,8 +57,14 @@ export default function AddPurchase() {
     const [date, setDate] = useState('');
     const [gstType, setGstType] = useState('');
     const [invoiceNo, setInvoiceNo] = useState('');
-    const [address, setAddress] = useState('add');
+    const [address, setAddress] = useState('');
     const [recieverName, setRecieverName] = useState('');
+    const [gstInvoiceNo, setGstInvoiceNo] = useState('');
+    const [gstInvoiceDate, setGstInvoiceDate] = useState('');
+
+
+
+
     const [hsnCode, setHsnCode] = useState('');
 
     const [rate, setRate] = useState('');
@@ -78,6 +85,10 @@ export default function AddPurchase() {
             setError("address Required");
         } else if (!recieverName) {
             setError("recieverName Required");
+        } else if (!gstInvoiceNo) {
+            setError("gstInvoiceNo Required");
+        } else if (!gstInvoiceDate) {
+            setError("gstInvoiceDate Required");
         } else if (!productName) {
             setError("productName Required");
         } else if (!company) {
@@ -102,6 +113,8 @@ export default function AddPurchase() {
                 value: value,
                 address: address,
                 recieverName: recieverName,
+                gstInvoiceNo: gstInvoiceNo,
+                gstInvoiceDate: gstInvoiceDate,
                 productName: productName,
                 company: company,
                 size: size,
@@ -157,6 +170,8 @@ export default function AddPurchase() {
                         supplierName: (val['value']),
                         address: (val['address']),
                         recieverName: (val['recieverName']),
+                        gstInvoiceNo: (val['gstInvoiceNo']),
+                        gstInvoiceDate: (val['gstInvoiceDate']),
                         product: (val['productName']),
                         company: (val['company']),
                         size: (val['size']),
@@ -220,14 +235,36 @@ export default function AddPurchase() {
         )
     }
 
+    const getAllItem = async () => {
+        console.log("Befor Api");
+
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/item/getAllItem', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    var data1 = data.message.reverse();
+                    setAllItem(data.message);
+                }
+            }
+        )
+    }
+
+
+
 
     useEffect(() => {
         getPurchase();
         getCompany();
+        getAllItem();
 
         if (localStorage.getItem("PurchaseList")) {
-            // const storedList = JSON.parse(localStorage.getItem("PurchaseList"));
-            // setPurchaseList(storedList);
             const storedList = localStorage.getItem("PurchaseList");
             let parsedList;
             if (storedList) {
@@ -286,20 +323,33 @@ export default function AddPurchase() {
                         />
 
 
-                        <select name="cars" id="cars" onChange={event => setValue(event.target.value)}
+                        <select name="cars" id="cars" onChange={event => {
+                            setValue(event.target.value),
+
+                                users.map((value1, index) => {
+                                    if (value1['firmName'] == event.target.value) {
+                                        setAddress(value1['location'])
+
+                                    }
+                                })
+                        }}
                             defaultValue={value}
                             style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10, maxWidth: '200px' }}
                         >
                             <option className='font-medium'>Select Product</option>
                             {
-                                users.map((value, index) => (
-                                    <option key={index}>{value['firmName']}</option>
-                                ))
+                                users.map((value1, index) => {
+                                    if (value1[value]) {
+                                        setHsnCode(value1['firmName'])
+                                    }
+                                    return (
+                                        <option key={index}>{value1['firmName']}</option>
+                                    )
+                                })
                             }
                         </select>
 
                         <Input
-                            isClearable
                             className="w-[90%] sm:max-w-[100%]"
                             placeholder="Address"
                             variant="bordered"
@@ -316,6 +366,22 @@ export default function AddPurchase() {
                             value={recieverName}
                             onChange={(e) => { setRecieverName(e.target.value) }}
                         />
+                        <Input
+                            isClearable
+                            className="w-[90%] sm:max-w-[100%]"
+                            placeholder="GST Invoice No."
+                            variant="bordered"
+                            value={gstInvoiceNo}
+                            onChange={(e) => { setGstInvoiceNo(e.target.value) }}
+                        />
+                        <Input
+                            isClearable
+                            className="w-[90%] sm:max-w-[100%]"
+                            placeholder="GST Invoice Date"
+                            variant="bordered"
+                            value={gstInvoiceDate}
+                            onChange={(e) => { setGstInvoiceDate(e.target.value) }}
+                        />
                     </div>
 
 
@@ -323,7 +389,17 @@ export default function AddPurchase() {
                     <div>
                         <div className='h-[100px] bg-white my-2  px-3 bt-1 grid gap-4 grid-cols-2 sm:grid-cols-4'>
 
-                            <select name="cars" id="cars" onChange={(event) => { setProductName(event.target.value), getCompany() }}
+                            <select name="cars" id="cars" onChange={(event) => {
+                                setProductName(event.target.value),
+                                    getCompany(),
+                                    allItem.map((value1, index) => {
+                                        if (value1['name'] == event.target.value) {
+                                            setHsnCode(value1['HSNCode'])
+                                            setUom(value1['uom'])
+                                        }
+                                    })
+
+                            }}
                                 defaultValue={productName}
                                 style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
                             >
@@ -360,48 +436,57 @@ export default function AddPurchase() {
                                     companyData.map((value) => (
                                         <>
                                             {
-                                                value['company'] == company && <option>{value['size']}</option>
+                                                value['name'] == productName && value['company'] == company && <option>{value['size']}</option>
                                             }
                                         </>
                                     ))
                                 }
                             </select>
 
-                            <select name="cars" id="cars" onChange={event => setMaterial(event.target.value)}
+                            <select name="cars" id="cars"
                                 defaultValue={material}
                                 style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+
+                                onChange={event => {
+                                    setMaterial(event.target.value),
+                                        companyData.map((value1, ind) => {
+                                            if (value1['name'] == productName && value1['company'] == company && value1['size'] == size && value1['materialType'] == event.target.value) {
+                                                setRate(value1['rate'])
+                                            }
+                                        })
+                                }}
                             >
                                 <option className='font-medium'>Select Material</option>
                                 {
                                     companyData.map((value) => (
+
                                         <>
                                             {
-                                                value['size'] == size && <option>{value['materialType']}</option>
+                                                value['name'] == productName && value['company'] == company && value['size'] == size && <option>{value['materialType']}</option>
                                             }
                                         </>
                                     ))
                                 }
                             </select>
                             <Input
-                                isClearable
                                 className="w-[90%] sm:max-w-[100%]"
                                 placeholder="HSN Code"
                                 variant="bordered"
                                 value={hsnCode}
                                 onChange={(e) => { setHsnCode(e.target.value) }}
+                                disabled
                             />
 
-                            <select name="cars" id="cars" onChange={event => setUom(event.target.value)}
-                                defaultValue={uom}
-                                style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
-                            >
-                                <option className='font-medium'>Select UOM</option>
-                                <option className='font-medium'>UOM1</option>
-                                <option className='font-medium'>UOM2</option>
-                            </select>
+                            <Input
+                                className="w-[90%] sm:max-w-[100%]"
+                                placeholder="UOM"
+                                variant="bordered"
+                                value={uom}
+                                onChange={(e) => { setUom(e.target.value) }}
+                                disabled
+                            />
 
                             <Input
-                                isClearable
                                 className="w-[90%] sm:max-w-[100%]"
                                 placeholder="Enter Rate"
                                 variant="bordered"
@@ -417,6 +502,7 @@ export default function AddPurchase() {
                                 value={qty}
                                 onChange={(e) => { setQty(e.target.value) }}
                             />
+
 
                         </div>
                     </div>
@@ -435,7 +521,7 @@ export default function AddPurchase() {
                     Save
                 </Button>
 
-            </div>
+            </div >
         </>
     )
 }

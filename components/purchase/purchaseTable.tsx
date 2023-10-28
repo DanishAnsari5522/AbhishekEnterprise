@@ -21,6 +21,7 @@ export default function PurchaseTable() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
+                    var data1 = data.message.reverse();
                     setUsers(data.message);
                 }
             }

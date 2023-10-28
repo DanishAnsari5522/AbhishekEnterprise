@@ -16,6 +16,7 @@ export default function AddCompany() {
     const router = useRouter();
     const [value, setValue] = useState('Select Product');
     const [users, setUsers] = useState([]);
+    const [gst, setGst] = useState('');
 
 
 
@@ -71,7 +72,7 @@ export default function AddCompany() {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ productName: value, companyName: val, size: sizeval })
+                        body: JSON.stringify({ productName: value, gst,companyName: val, size: sizeval })
                     }).then(res => res.json()).then(
                         async data => {
                             if (data.success == false) {
@@ -132,9 +133,18 @@ export default function AddCompany() {
                     <div className='h-[100px] bg-white my-2 flex px-3 items-center bt-1'>
                         <div className='absolute  top-0 right-0'>Link</div>
 
-                        <select name="cars" id="cars" onChange={event => setValue(event.target.value)}
+                        <select name="cars" id="cars"
                             defaultValue={value}
                             style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10 }}
+                            onChange={event => {
+                                setValue(event.target.value),
+                                    users.map((value1, index) => {
+                                        if (value1['name'] == event.target.value) {
+                                            setGst(value1['gst'])
+
+                                        }
+                                    })
+                            }}
                         >
                             <option className='font-medium'>Select Product</option>
                             {
