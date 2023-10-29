@@ -5,7 +5,7 @@ import { DeleteIcon } from "../../../icons/table/delete-icon";
 import { useRouter } from 'next/router';
 
 
-export default function MaterialTable() {
+export default function MaterialTable({ handleClick}:any) {
     const [page, setPage] = React.useState(1);
     const router = useRouter();
 
@@ -140,7 +140,7 @@ export default function MaterialTable() {
                         <TableCell>{getKeyValue(item, 'rate')}</TableCell>
                         <TableCell className="flex flex-row gap-2">
                             <Tooltip content="Edit user">
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={event => handleClick(event, item['_id'])}>
                                     <EditIcon />
                                 </span>
                             </Tooltip>

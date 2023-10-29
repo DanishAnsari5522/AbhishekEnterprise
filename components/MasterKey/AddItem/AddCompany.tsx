@@ -19,6 +19,10 @@ export default function AddCompany() {
     const [gst, setGst] = useState('');
 
 
+    const [toggle, setToggle] = useState(false);
+    const [idUpdate, setIdUpdate] = useState('');
+
+
 
     // Chip Start
     const [fruits, setFruits] = useState(['']);
@@ -72,7 +76,7 @@ export default function AddCompany() {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ productName: value, gst,companyName: val, size: sizeval })
+                        body: JSON.stringify({ productName: value, gst, companyName: val, size: sizeval })
                     }).then(res => res.json()).then(
                         async data => {
                             if (data.success == false) {
@@ -111,6 +115,84 @@ export default function AddCompany() {
         )
 
     }
+
+
+    const handleClick = async (event: any, id: any) => {
+        console.log('from Child:', id);
+        setToggle(true);
+        setIdUpdate(id);
+
+        try {
+            const response = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/getCompanyById?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+
+                if (data.success === false) {
+                    console.log('Error');
+                } else if (data.success === true) {
+                    console.log('Fetch');
+                    console.log(data.message.size);
+                    setValue(data.message.productName);
+                    setCompany(data.message.companyName);
+                    setSize(data.message.size);
+                }
+            } else {
+                console.error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    };
+
+
+    const handleUpdate = async () => {
+
+        console.log("Befor Api");
+
+        if ((value == "Select Product")) {
+            setError("selected Product Required");
+        } else if (fruits.length < 1) {
+            setError("company Required");
+        } else if (sizeChip.length < 1) {
+            setError("size Required");
+        } else {
+
+            fruits.map(async (val, index) => {
+                sizeChip.map(async (sizeval, sizeind) => {
+                    let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/updateCompany?id=${idUpdate}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productName: value, companyName: val, size: sizeval })
+                    }).then(res => res.json()).then(
+                        async data => {
+                            if (data.success == false) {
+                                console.log("Error");
+                            } else if (data.success == true) {
+                                console.log("Hello");
+                                // router.reload();
+                            }
+                        }
+                    )
+                    if (fruits.length == index + 1) {
+                        router.reload();
+                    }
+
+                })
+
+            })
+        }
+    }
+
+
 
 
     useEffect(() => {
@@ -209,9 +291,25 @@ export default function AddCompany() {
                         </div>
 
 
-                        <Button color="success" className='text-white ml-4' size='md' onClick={handleSubmit}>
+                        {/* <Button color="success" className='text-white ml-4' size='md' onClick={handleSubmit}>
                             Add
-                        </Button>
+                        </Button> */}
+
+                        {!toggle ? <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
+                            Add
+                        </Button> : <>
+                            <Button color="success" className='text-white ml-2' onClick={handleUpdate}>
+                                Update
+                            </Button>
+                            <Button color="primary" variant="flat" className='text-white ml-2' onClick={() => {
+                                setToggle(false);
+                                setCompany('');
+                                setSize('');
+                            }}>
+                                cancel
+                            </Button>
+                        </>
+                        }
 
                         <Button color="danger" className='ml-4' onClick={() => { router.push('/admin/MasterKey/addItem/addMaterial') }}>
                             Add Material
@@ -219,7 +317,7 @@ export default function AddCompany() {
 
                     </div>
 
-                    <CompanyTable />
+                    <CompanyTable handleClick={handleClick} />
                 </div>
             </div>
         </>

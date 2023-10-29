@@ -11,6 +11,8 @@ export default function AddItem() {
     const [hsnCode, setHsnCode] = useState('');
     const [uom, setUom] = useState('');
     const [error, setError] = useState('');
+    const [toggle, setToggle] = useState(false);
+    const [idUpdate, setIdUpdate] = useState('');
 
     const handleSubmit = async () => {
         console.log("Befor Api");
@@ -44,6 +46,77 @@ export default function AddItem() {
             )
         }
     }
+
+
+    const handleClick = async (event: any, id: any) => {
+        console.log('from Child:', id);
+        setToggle(true);
+        setIdUpdate(id);
+
+        try {
+            const response = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/getItemById?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+
+                if (data.success === false) {
+                    console.log('Error');
+                } else if (data.success === true) {
+                    console.log('Fetch');
+                    console.log(data.message.name);
+                    setProductName(data.message.name);
+                    setGst(data.message.gst);
+                    setHsnCode(data.message.HSNCode);
+                    setUom(data.message.uom)
+
+                }
+            } else {
+                console.error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    };
+
+    const handleUpdate = async () => {
+        console.log("Befor Api");
+
+        if (!productName) {
+            setError("ProductName Required");
+        } else if (!gst) {
+            setError("gst Required");
+        } else if (!hsnCode) {
+            setError("HSN Code Required");
+        } else if (!uom) {
+            setError("UOM Required");
+        } else {
+
+            let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/updateItem?id=${idUpdate}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: productName, gst, HSNCode: hsnCode, uom })
+            }).then(res => res.json()).then(
+                async data => {
+                    if (data.success == false) {
+                        console.log("Error");
+                    } else if (data.success == true) {
+                        console.log("Hello");
+                        router.reload();
+
+                    }
+                }
+            )
+        }
+    }
+
 
     return (
         <>
@@ -88,9 +161,23 @@ export default function AddItem() {
                             onChange={(e) => { setUom(e.target.value) }}
                         />
 
-                        <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
+                        {!toggle ? <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
                             Add
-                        </Button>
+                        </Button> : <>
+                            <Button color="success" className='text-white ml-2' onClick={handleUpdate}>
+                                Update
+                            </Button>
+                            <Button color="primary" variant="flat" className='text-white ml-2' onClick={() => {
+                                setToggle(false);
+                                setProductName('');
+                                setHsnCode('');
+                                setGst('');
+                                setUom('');
+                            }}>
+                                cancel
+                            </Button>
+                        </>
+                        }
 
                         <Button color="danger" className='ml-4' onClick={() => { router.push('/admin/MasterKey/addItem/addCompany') }}>
                             Add Company
@@ -98,7 +185,7 @@ export default function AddItem() {
                     </div>
                 </div>
 
-                <ItemTable />
+                <ItemTable handleClick={handleClick} />
 
             </div>
         </>

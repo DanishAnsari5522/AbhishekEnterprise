@@ -4,7 +4,7 @@ import { EditIcon } from "../../../icons/table/edit-icon";
 import { DeleteIcon } from "../../../icons/table/delete-icon";
 
 
-export default function CompanyTable() {
+export default function CompanyTable({ handleClick}:any) {
     const [page, setPage] = React.useState(1);
 
     const [users, setUsers] = useState([]);
@@ -109,7 +109,7 @@ export default function CompanyTable() {
                         <TableCell>{getKeyValue(item, 'size')}</TableCell>
                         <TableCell className="flex flex-row gap-2">
                             <Tooltip content="Edit user">
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={event => handleClick(event, item['_id'])}>
                                     <EditIcon />
                                 </span>
                             </Tooltip>

@@ -18,7 +18,8 @@ export default function AddMaterial() {
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
 
-
+    const [toggle, setToggle] = useState(false);
+    const [idUpdate, setIdUpdate] = useState('');
 
 
     const router = useRouter();
@@ -100,6 +101,85 @@ export default function AddMaterial() {
     }
 
 
+    const handleClick = async (event: any, id: any) => {
+        console.log('from Child:', id);
+        setToggle(true);
+        setIdUpdate(id);
+
+        try {
+            const response = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/getMaterialById?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+
+                if (data.success === false) {
+                    console.log('Error');
+                } else if (data.success === true) {
+                    console.log('Fetch');
+                    console.log(data.message.size);
+                    setProductName(data.message.name);
+                    setCompany(data.message.company);
+                    setSize(data.message.size);
+                    setMaterialType(data.message.materialType);
+                    setUnit(data.message.unit)
+                    setRate(data.message.rate)
+                }
+            } else {
+                console.error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    };
+
+
+    const handleUpdate = async () => {
+        console.log("Befor Api");
+
+        if ((productName == `Select Product`)) {
+            setError("ProductName Required");
+        } else if ((company == `Select Company`)) {
+            setError("company Required");
+        } else if ((size == `Select size`)) {
+            setError("size Required");
+        } else if (!materialType) {
+            setError("materialType Required");
+        } else if (!unit) {
+            setError("Unit Required");
+        } else if (!rate) {
+            setError("rate Required");
+        } else {
+
+            let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/item/updateMaterial?id=${idUpdate}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: productName, company: company, size: size, materialType: materialType, unit: unit, rate })
+            }).then(res => res.json()).then(
+                async data => {
+                    if (data.success == false) {
+                        console.log("Error");
+                    } else if (data.success == true) {
+                        console.log("Hello");
+                        router.reload();
+
+                    }
+                }
+            )
+        }
+
+    }
+
+
+
+
     useEffect(() => {
         getProduct()
         getCompany();
@@ -117,7 +197,7 @@ export default function AddMaterial() {
                 </div>
                 <div>
                     {error && <p className='text-red-800'>{error}</p>}
-                    <div className='h-[100px] bg-white my-2 flex px-3 items-center bt-1'>
+                    <div className='h-[100px] bg-white my-2 px-3 items-center bt-1 grid grid-cols-6 gap-4'>
                         <div className='absolute  top-0 right-0'>Link</div>
 
                         <div className='ml-3'>
@@ -176,7 +256,7 @@ export default function AddMaterial() {
                         </div>
                         <Input
                             isClearable
-                            className="w-[150px] sm:max-w-[44%] ml-4"
+                            className="w-[100%] sm:max-w-[100%] ml-4"
                             placeholder="Material Type"
                             variant="bordered"
                             value={materialType}
@@ -185,7 +265,7 @@ export default function AddMaterial() {
 
                         <Input
                             isClearable
-                            className="w-[150px] sm:max-w-[44%] ml-4 b"
+                            className="w-[100%] sm:max-w-[100%] ml-4 b"
                             placeholder="Quantity"
                             variant="bordered"
                             value={unit}
@@ -194,7 +274,7 @@ export default function AddMaterial() {
 
                         <Input
                             isClearable
-                            className="w-[150px] sm:max-w-[44%] ml-4 b"
+                            className="w-[100%] sm:max-w-[100%] ml-4 b"
                             placeholder="Rate"
                             variant="bordered"
                             value={rate}
@@ -202,13 +282,32 @@ export default function AddMaterial() {
                         />
 
 
-                        <Button color="success" className='text-white ml-4' size='md' onClick={handleSubmit}>
+                        {/* <Button color="success" className='text-white ml-4' size='md' onClick={handleSubmit}>
                             Add
-                        </Button>
+                        </Button> */}
+                        {!toggle ? <Button color="success" className='text-white ml-2' onClick={handleSubmit}>
+                            Add
+                        </Button> : <>
+                            <Button color="success" className='text-white ml-2' onClick={handleUpdate}>
+                                Update
+                            </Button>
+                            <Button color="primary" variant="flat" className='text-white ml-2' onClick={() => {
+                                setToggle(false);
+                                setProductName('');
+                                setCompany('');
+                                setSize('');
+                                setMaterialType('');
+                                setUnit('')
+                                setRate('')
+                            }}>
+                                cancel
+                            </Button>
+                        </>
+                        }
 
                     </div>
 
-                    <MaterialTable />
+                    <MaterialTable handleClick={handleClick} />
                 </div>
             </div >
         </>
