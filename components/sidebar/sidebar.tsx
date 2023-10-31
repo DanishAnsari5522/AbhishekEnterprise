@@ -179,11 +179,13 @@ export const SidebarWrapper = () => {
               />
 
               <SidebarItem
-                isActive={router.pathname === '/admin/Reports'}
+                isActive={router.pathname === '/admin/report'}
                 title="Reports"
                 icon={<BalanceIcon />}
-                href={auth ? "/admin/business" : "/"}
+                href={"/admin/report"}
+
               />
+
 
               <CollapseItems
                 icon={<BalanceIcon />}

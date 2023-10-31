@@ -31,6 +31,7 @@ export default function AddPurchase() {
     const [error, setError] = useState('');
     const [purchaseList, setPurchaseList] = useState<PurchaseItem[]>([]);
     const [purchaseListData, setPurchaseListData] = useState([])
+    const [visiblity, setVisiblity] = useState(false)
 
 
     // +++++++++++++++++++++++++++++++++++++++++ Select Start +++++++++++++++++++++++++++++++++++++++++++++
@@ -313,9 +314,9 @@ export default function AddPurchase() {
                             value={gstType}
                             onValueChange={setGstType}
                         >
-                            <Radio value="nongst">NON-GST</Radio>
-                            <Radio value="gst">GST</Radio>
-                            <Radio value="igst">IGST</Radio>
+                            <Radio value="nongst" onClick={() => { setGstInvoiceNo('NA'),setGstInvoiceDate('NA') }}>NON-GST</Radio>
+                            <Radio value="gst" onClick={() => { setGstInvoiceNo(''),setGstInvoiceDate('') }}>GST</Radio>
+                            <Radio value="igst" onClick={() => { setGstInvoiceNo(''),setGstInvoiceDate('') }}>IGST</Radio>
                         </RadioGroup>
 
 

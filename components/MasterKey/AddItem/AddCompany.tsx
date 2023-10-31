@@ -238,6 +238,7 @@ export default function AddCompany() {
 
                         <div className='flex flex-col h-10'>
                             <div className='flex'>
+                                {/* <label>Compay</label> */}
                                 <Input
                                     isClearable
                                     className="w-[150px] sm:max-w-[44%] ml-4"
