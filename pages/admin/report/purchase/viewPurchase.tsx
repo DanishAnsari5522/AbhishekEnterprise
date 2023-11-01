@@ -1,8 +1,8 @@
-// import { Accounts } from "../../components/accounts"
 import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
+import PurchaseViewTable from "../../../../components/report/purchase/viewPurchase";
 
-const Admin = () => {
+const ReportR = () => {
     const router = useRouter()
     useEffect(() => {
         let auth1 = localStorage.getItem('user');
@@ -12,9 +12,9 @@ const Admin = () => {
     })
     return (
         <>
-            <p>Admin Page</p>
+            <PurchaseViewTable />
         </>
     )
 }
 
-export default Admin;
+export default ReportR;

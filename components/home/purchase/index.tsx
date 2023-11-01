@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
-export default function PurchaseTable() {
+export default function PurchaseDashboardTable() {
     const router = useRouter();
     const [page, setPage] = React.useState(1);
 
@@ -31,7 +31,7 @@ export default function PurchaseTable() {
                     setUsersData(data.message);
 
                     const unique2 = (data.message).filter((obj: any, index: any) => {
-                        return index === (data.message).findIndex((o: any) => obj.supplierName === o.supplierName && obj.recieverName == o.recieverName && o.approvedByAdmin == true);
+                        return index === (data.message).findIndex((o: any) => obj.supplierName === o.supplierName && obj.recieverName == o.recieverName && obj.approvedByAdmin == false);
                     });
 
                     // console.log(unique2);
@@ -63,11 +63,9 @@ export default function PurchaseTable() {
 
     return (
         <>
+            <p className="text-2xl">Purchase List</p>
             {
                 usersData.map((val) => {
-                    if (val['approvedByAdmin'] == false) {
-                        return
-                    }
                     return (
                         <>
                             <span className="none opacity-0 object-none hidden">
@@ -78,7 +76,7 @@ export default function PurchaseTable() {
                 })
             }
 
-            <p className="flex justify-end mr-4">Total Purchase <span className="text-xl ml-4">{total}</span></p>
+            {/* <p className="flex justify-end mr-4">Total Purchase <span className="text-xl ml-4">{total}</span></p> */}
 
             <Table
                 aria-label="Example table with client side pagination"
@@ -120,7 +118,7 @@ export default function PurchaseTable() {
                             <TableCell>
                                 {/* Map usersData and transform the data to return React nodes */}
                                 {usersData.map((val) => {
-                                    if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                    if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName']) {
                                         // grossTotal += parseInt(val['rate']);
                                         grossTotal += ((parseInt(val['qty']) * parseInt(val['rate']) / 100) * 12) + (parseInt(val['qty']) * parseInt(val['rate']))
                                         console.log("for", grossTotal);
@@ -136,7 +134,7 @@ export default function PurchaseTable() {
 
                             </TableCell>
                             <TableCell>
-                                <Button color="primary" size="sm" onClick={() => { router.push({ pathname: '/admin/report/purchase/viewPurchase', query: { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName') } }) }}>View</Button>
+                                <Button color="primary" size="sm" onClick={() => { router.push({ pathname: 'admin/viewPurchaseDashboardTable', query: { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName') } }) }}>View</Button>
                             </TableCell>
                         </TableRow>
                     )}

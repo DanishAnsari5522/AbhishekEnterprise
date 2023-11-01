@@ -44,8 +44,8 @@ export default function Report() {
                 <Tabs aria-label="Dynamic tabs" items={tabs}>
                     {(item) => (
                         <Tab key={item.id} title={item.label}>
-                            <Card>
-                                <CardBody className='m-0 p-0 bg-inherit pt-2'>
+                            <Card className=''>
+                                <CardBody className='m-0 p-0 bg-gray-50 pt-2 shadow-sm border-none rounded-none'>
                                     {
                                         item.id == "p&i Report" ? <p className='text-center'>p&i Report</p> :
                                             item.id == "Stock" ? <><p className='text-center'>Stock</p> <Stock /></> :

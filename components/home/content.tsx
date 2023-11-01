@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
-// import BusinessTable from "../businesss/businessTable/Index";
+import PurchaseDashboardTable from "./purchase";
 
 
 
@@ -15,8 +15,7 @@ export const Content = () => {
   return (
     <>
       <div className='p-6 pb-0'>
-        {/* <BusinessTable /> */}
-        <p>DashBord</p>
+        <PurchaseDashboardTable />
       </div>
     </>
   )

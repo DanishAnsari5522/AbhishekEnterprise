@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, user } from "@nextui-org/react";
 import { EditIcon } from "../../icons/table/edit-icon";
 import { DeleteIcon } from "../../icons/table/delete-icon";
 import { useRouter } from 'next/router';
@@ -8,6 +8,8 @@ import { useRouter } from 'next/router';
 export default function Stock({ handleClick }: any) {
     const [page, setPage] = React.useState(1);
     const router = useRouter();
+    // const [total, setTotal] = useState(0);
+    let total = 0;
 
 
     const [users, setUsers] = useState([]);
@@ -76,59 +78,73 @@ export default function Stock({ handleClick }: any) {
     }, [page, users]);
 
     return (
-        <Table
-            aria-label="Example table with client side pagination"
-            bottomContent={
-                <div className="flex w-full justify-center">
-                    <Pagination
-                        isCompact
-                        showControls
-                        showShadow
-                        color="secondary"
-                        page={page}
-                        total={pages}
-                        onChange={(page) => setPage(page)}
-                    />
-                </div>
+        <>
+            {
+                users.map((val) => {
+                    return (
+                        <>
+                            <span className="none opacity-0 object-none hidden">
+                                {total += val['rate'] * val['rate'] }
+                            </span>
+                        </>
+                    )
+                })
             }
-            classNames={{
-                wrapper: "min-h-[222px]",
-            }}
-        >
-            <TableHeader>
-                <TableColumn key="name">NAME</TableColumn>
-                <TableColumn key="company">company</TableColumn>
-                <TableColumn key="size">size</TableColumn>
-                <TableColumn key="materialType">materialType</TableColumn>
-                <TableColumn key="unit">Quantity</TableColumn>
-                <TableColumn key="rate">Rate</TableColumn>
-                <TableColumn key="action">Action</TableColumn>
 
-            </TableHeader>
-            <TableBody items={items}>
-                {(item) => (
-                    <TableRow key={1}>
-                        <TableCell>{getKeyValue(item, 'name')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'company')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'size')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'materialType')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'unit')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
-                        <TableCell className="flex flex-row gap-2">
-                            <Tooltip content="Edit user">
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={event => handleClick(event, item['_id'])}>
-                                    <EditIcon />
-                                </span>
-                            </Tooltip>
-                            <Tooltip color="danger" content="Delete user">
-                                <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { deleteBusiness(item['_id']) }}>
-                                    <DeleteIcon />
-                                </span>
-                            </Tooltip>
-                        </TableCell>
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table >
+            <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+
+            <Table
+                aria-label="Example table with client side pagination"
+                bottomContent={
+                    <div className="flex w-full justify-center">
+                        <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="secondary"
+                            page={page}
+                            total={pages}
+                            onChange={(page) => setPage(page)}
+                        />
+                    </div>
+                }
+                classNames={{
+                    wrapper: "min-h-[222px]",
+                }}
+            >
+                <TableHeader>
+                    <TableColumn key="name">Product List</TableColumn>
+                    <TableColumn key="company">HSN Code</TableColumn>
+                    <TableColumn key="rate">Rate</TableColumn>
+                    <TableColumn key="materialType">UOM</TableColumn>
+                    <TableColumn key="unit">Total Qty</TableColumn>
+                    <TableColumn key="rate">Sale Qty</TableColumn>
+                    <TableColumn key="rate">Avil. Qty</TableColumn>
+                    <TableColumn key="action">Amount</TableColumn>
+
+
+                </TableHeader>
+                <TableBody items={items}>
+                    {(item) => (
+                        <TableRow key={1}>
+                            <TableCell>
+                                {getKeyValue(item, 'name')} ,
+                                {getKeyValue(item, 'company')} ,
+                                {getKeyValue(item, 'size')}
+                            </TableCell>
+                            <TableCell>{getKeyValue(item, 'company')}</TableCell>
+                            <TableCell>{getKeyValue(item, 'rate')}</TableCell>
+                            <TableCell>{getKeyValue(item, 'materialType')}</TableCell>
+                            <TableCell>{getKeyValue(item, 'unit')}</TableCell>
+                            <TableCell>0</TableCell>
+                            <TableCell>{parseInt(getKeyValue(item, 'unit')) - 0}</TableCell>
+                            <TableCell className="flex flex-row gap-2">
+                                {parseInt(getKeyValue(item, 'rate')) * parseInt(getKeyValue(item, 'rate'))}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </>
     );
 }
