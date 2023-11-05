@@ -138,6 +138,12 @@ export const SidebarWrapper = () => {
                 href={"/admin/purchase"}
               />
               <SidebarItem
+                isActive={router.pathname === '/admin/purchase'}
+                title="Pay Voucher"
+                icon={<BalanceIcon />}
+                href={"/admin/purchase"}
+              />
+              <SidebarItem
                 isActive={router.pathname === '/admin/business'}
                 title="Stock"
                 icon={<ViewIcon />}

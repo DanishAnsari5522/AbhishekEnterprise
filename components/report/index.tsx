@@ -3,6 +3,7 @@ import { Tabs, Tab, Card, CardBody, CardHeader } from "@nextui-org/react";
 import { useRouter } from 'next/router';
 import PurchaseTable from './purchase';
 import Stock from './stock';
+import SupplierTable from './supplier';
 
 
 export default function Report() {
@@ -50,7 +51,7 @@ export default function Report() {
                                         item.id == "p&i Report" ? <p className='text-center'>p&i Report</p> :
                                             item.id == "Stock" ? <><p className='text-center'>Stock</p> <Stock /></> :
                                                 item.id == "Purchase" ? <> <p className='text-center'>Purchase</p> <PurchaseTable /></> :
-                                                    item.id == "Supplier" ? <p className='text-center'>Supplier</p> :
+                                                    item.id == "Supplier" ? <> <p className='text-center'>Supplier</p><SupplierTable /> </> :
                                                         item.id == "Pay Voucher" ? <p className='text-center'>Pay Voucher</p> :
                                                             <p></p>
                                     }
