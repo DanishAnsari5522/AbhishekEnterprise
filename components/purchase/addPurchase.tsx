@@ -3,6 +3,9 @@ import { Input, Button, Link } from "@nextui-org/react";
 import { useRouter } from 'next/router';
 import { RadioGroup, Radio } from "@nextui-org/react";
 import PurchaseListTable from './purchaseListTable';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
+import { DeleteIcon } from "../icons/table/delete-icon";
+import { EditIcon } from "../icons/table/edit-icon";
 
 interface PurchaseItem {
     date: string;
@@ -126,7 +129,14 @@ export default function AddPurchase() {
             console.log(purchaseList);
             setPurchaseList([...purchaseList, newpurchaseList]);
             localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
-            router.reload();
+            // router.reload();
+            getLocalData();
+            getBusiness();
+            setProductName('Select Product');
+            setHsnCode('');
+            setUom('');
+            setRate('');
+            setQty('');
             console.log(purchaseList);
 
         }
@@ -147,7 +157,6 @@ export default function AddPurchase() {
                     setPurchaseListData(parsedList);
                 } catch (error) {
                     console.log(error);
-
                 }
             }
         }
@@ -236,6 +245,8 @@ export default function AddPurchase() {
         )
     }
 
+
+
     const getAllItem = async () => {
         console.log("Befor Api");
 
@@ -257,11 +268,7 @@ export default function AddPurchase() {
         )
     }
 
-    useEffect(() => {
-        getPurchase();
-        getCompany();
-        getAllItem();
-
+    const getLocalData = () => {
         if (localStorage.getItem("PurchaseList")) {
             const storedList = localStorage.getItem("PurchaseList");
             let parsedList;
@@ -275,7 +282,51 @@ export default function AddPurchase() {
                 }
             }
         }
+    }
+
+
+    // Get Table Data
+    const [page, setPage] = React.useState(1);
+
+    const [tableUsers, setTableUsers] = useState([]);
+    const getBusiness = async () => {
+        console.log("Befor Api");
+        if (localStorage.getItem("PurchaseList")) {
+            const storedList = localStorage.getItem("PurchaseList");
+            let parsedList;
+            if (storedList) {
+                try {
+                    parsedList = JSON.parse(storedList);
+                    setTableUsers(parsedList);
+                } catch (error) {
+                    console.log(error);
+
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        getBusiness();
+        getPurchase();
+        getCompany();
+        getAllItem();
+        getLocalData();
+
+
     }, [])
+
+
+    const rowsPerPage = 10;
+
+    const pages = Math.ceil(tableUsers.length / rowsPerPage);
+
+    const items = React.useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return tableUsers.slice(start, end);
+    }, [page, tableUsers]);
 
 
     return (
@@ -314,9 +365,9 @@ export default function AddPurchase() {
                             value={gstType}
                             onValueChange={setGstType}
                         >
-                            <Radio value="nongst" onClick={() => { setGstInvoiceNo('NA'),setGstInvoiceDate('NA') }}>NON-GST</Radio>
-                            <Radio value="gst" onClick={() => { setGstInvoiceNo(''),setGstInvoiceDate('') }}>GST</Radio>
-                            <Radio value="igst" onClick={() => { setGstInvoiceNo(''),setGstInvoiceDate('') }}>IGST</Radio>
+                            <Radio value="nongst" onClick={() => { setGstInvoiceNo('NA'), setGstInvoiceDate('NA') }}>NON-GST</Radio>
+                            <Radio value="gst" onClick={() => { setGstInvoiceNo(''), setGstInvoiceDate('') }}>GST</Radio>
+                            <Radio value="igst" onClick={() => { setGstInvoiceNo(''), setGstInvoiceDate('') }}>IGST</Radio>
                         </RadioGroup>
 
 
@@ -514,7 +565,68 @@ export default function AddPurchase() {
                     </Button>
                 </div>
 
-                <PurchaseListTable />
+                {/* <PurchaseListTable /> */}
+
+
+                <Table
+                    aria-label="Example table with client side pagination"
+                    bottomContent={
+                        <div className="flex w-full justify-center">
+                            <Pagination
+                                isCompact
+                                showControls
+                                showShadow
+                                color="secondary"
+                                page={page}
+                                total={pages}
+                                onChange={(page) => setPage(page)}
+                            />
+                        </div>
+                    }
+                    classNames={{
+                        wrapper: "min-h-[222px]",
+                    }}
+                >
+                    <TableHeader>
+                        <TableColumn key='productName'>Particular</TableColumn>
+                        <TableColumn key="hsnCode">HSN CODE</TableColumn>
+                        <TableColumn key="uom">uom</TableColumn>
+                        <TableColumn key="qty">qty</TableColumn>
+                        <TableColumn key="rate">Gross Amt.</TableColumn>
+                        <TableColumn key="gstType">GST</TableColumn>
+                        <TableColumn key="action">Action</TableColumn>
+
+
+                    </TableHeader>
+                    <TableBody items={items}>
+                        {(item) => (
+                            <TableRow key={1}>
+                                <TableCell>{getKeyValue(item, 'productName')}</TableCell>
+                                <TableCell>{getKeyValue(item, 'hsnCode')}</TableCell>
+                                <TableCell>{getKeyValue(item, 'uom')}</TableCell>
+                                <TableCell>{getKeyValue(item, 'qty')}</TableCell>
+                                <TableCell>{getKeyValue(item, 'rate')}</TableCell>
+                                <TableCell>{getKeyValue(item, 'gstType')}</TableCell>
+                                <TableCell className="flex flex-row gap-2">
+                                    <Tooltip content="Edit user">
+                                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50" onClick={() => { alert('Edit under Process...') }}>
+                                            <EditIcon />
+                                        </span>
+                                    </Tooltip>
+                                    <Tooltip color="danger" content="Delete user" onClick={() => { alert('Delete') }}>
+                                        <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => { alert('delete under Process...') }}>
+                                            <DeleteIcon />
+                                        </span>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+
+
+
+
 
 
                 <Button color="success" className='text-white ml-2  justify-items-end' onClick={handleSubmit}>

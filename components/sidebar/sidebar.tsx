@@ -20,6 +20,10 @@ import { useSidebarContext } from "../layout/layout-context";
 import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { useRouter } from "next/router";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import logo from '../../public/AElogo.png';
+import Image from 'next/image';
+
+
 
 export const SidebarWrapper = () => {
   const router = useRouter();
@@ -51,7 +55,13 @@ export const SidebarWrapper = () => {
         })}
       >
         <div className={Sidebar.Header()}>
-          <CompaniesDropdown />
+          {/* <CompaniesDropdown /> */}
+          <Image
+            src={logo}
+            width={100}
+            height={70}
+            alt="Picture of the author"
+          />
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
@@ -138,10 +148,10 @@ export const SidebarWrapper = () => {
                 href={"/admin/purchase"}
               />
               <SidebarItem
-                isActive={router.pathname === '/admin/purchase'}
+                isActive={router.pathname === '/admin/payVoucher'}
                 title="Pay Voucher"
                 icon={<BalanceIcon />}
-                href={"/admin/purchase"}
+                href={"/admin/payVoucher"}
               />
               <SidebarItem
                 isActive={router.pathname === '/admin/business'}

@@ -28,13 +28,8 @@ export const NavbarWrapper = ({ children }: Props) => {
           <BurguerButton />
         </NavbarContent>
         <NavbarContent className="w-full max-md:hidden">
-          <Image
-            src={logo}
-            width={100}
-            height={70}
-            alt="Picture of the author"
-          />
-          <Input
+
+          {/* <Input
             startContent={<SearchIcon />}
             isClearable
             className="w-full"
@@ -43,13 +38,14 @@ export const NavbarWrapper = ({ children }: Props) => {
               mainWrapper: "w-full",
             }}
             placeholder="Search..."
-          />
+          /> */}
+          <p className="uppercase items-center font-bold">Abhishek Enterprise</p>
         </NavbarContent>
         <NavbarContent
           justify="end"
           className="w-fit data-[justify=end]:flex-grow-0"
         >
-          <NotificationsDropdown />
+          {/* <NotificationsDropdown /> */}
           <NavbarContent>
             <UserDropdown />
           </NavbarContent>
