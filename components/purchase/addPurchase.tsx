@@ -6,16 +6,10 @@ import PurchaseListTable from './purchaseListTable';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip } from "@nextui-org/react";
 import { DeleteIcon } from "../icons/table/delete-icon";
 import { EditIcon } from "../icons/table/edit-icon";
+import Test from './Test';
 
 interface PurchaseItem {
-    date: string;
     gstType: string;
-    invoiceNo: string;
-    value: string;
-    address: string;
-    recieverName: string;
-    gstInvoiceNo: string;
-    gstInvoiceDate: string;
     productName: string;
     company: string;
     size: string;
@@ -108,37 +102,109 @@ export default function AddPurchase() {
         } else if (!qty) {
             setError("qty Required");
         } else {
-            const newpurchaseList = {
-                date: date,
-                gstType: gstType,
-                invoiceNo: invoiceNo,
-                value: value,
-                address: address,
-                recieverName: recieverName,
-                gstInvoiceNo: gstInvoiceNo,
-                gstInvoiceDate: gstInvoiceDate,
-                productName: productName,
-                company: company,
-                size: size,
-                material: material,
-                hsnCode: hsnCode,
-                uom: uom,
-                rate: rate,
-                qty: qty
-            }
-            console.log(purchaseList);
-            setPurchaseList([...purchaseList, newpurchaseList]);
-            localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
-            // router.reload();
-            getLocalData();
-            getBusiness();
-            setProductName('Select Product');
-            setHsnCode('');
-            setUom('');
-            setRate('');
-            setQty('');
-            console.log(purchaseList);
 
+            if (localStorage.getItem("PurchaserDetail")) {
+                const storedList = localStorage.getItem("PurchaserDetail");
+                let parsedList;
+                let data: any;
+                if (storedList) {
+                    try {
+                        parsedList = JSON.parse(storedList);
+                        // setPurchaseListData(parsedList);
+                        // break;
+                        if (parsedList[0]['value'] != date && parsedList[0]['value'] != gstType && parsedList[0]['value'] != value) {
+                            alert(`ERROR FIRST YOU ADD THE PREVIUS ITEM EITHER REMOVE ALL ITEM PurchaseName:- ${parsedList[0]["value"]} and Revicer Name :-${parsedList[0]["recieverName"]}`);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            } else {
+                localStorage.setItem("PurchaserDetail", JSON.stringify([
+                    {
+                        "date": date,
+                        "gstType": gstType,
+                        "value": value,
+                        "address": address,
+                        "recieverName": recieverName,
+                        "gstInvoiceNo": gstInvoiceNo,
+                        "gstInvoiceDate": gstInvoiceDate
+                    }
+                ])
+                );
+
+            }
+
+
+            if (localStorage.getItem("PurchaserDetail")) {
+                const storedList = localStorage.getItem("PurchaserDetail");
+                let parsedList;
+                let data: any;
+                if (storedList) {
+                    try {
+                        parsedList = JSON.parse(storedList);
+                        // setPurchaseListData(parsedList);
+                        // break;
+                        if (parsedList[0]['value'] != date && parsedList[0]['value'] != gstType && parsedList[0]['value'] != value) {
+                            alert(`ERROR FIRST YOU ADD THE PREVIUS ITEM EITHER REMOVE ALL ITEM PurchaseName:- ${parsedList[0]["value"]} and Revicer Name :-${parsedList[0]["recieverName"]}`);
+                        } else {
+                            const newpurchaseList = {
+                                gstType: gstType,
+                                productName: productName,
+                                company: company,
+                                size: size,
+                                material: material,
+                                hsnCode: hsnCode,
+                                uom: uom,
+                                rate: rate,
+                                qty: qty
+                            }
+                            console.log(purchaseList);
+
+                            setPurchaseList([...purchaseList, newpurchaseList]);
+                            localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
+                            // router.reload();
+                            getLocalData();
+                            getBusiness();
+                            setProductName('Select Product');
+                            setHsnCode('');
+                            setUom('');
+                            setRate('');
+                            setQty('');
+                            console.log(purchaseList);
+
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            } else {
+                const newpurchaseList = {
+                    gstType: gstType,
+                    productName: productName,
+                    company: company,
+                    size: size,
+                    material: material,
+                    hsnCode: hsnCode,
+                    uom: uom,
+                    rate: rate,
+                    qty: qty
+                }
+                console.log(purchaseList);
+
+                setPurchaseList([...purchaseList, newpurchaseList]);
+                localStorage.setItem("PurchaseList", JSON.stringify([...purchaseList, newpurchaseList]));
+                // router.reload();
+                getLocalData();
+                getBusiness();
+                setProductName('Select Product');
+                setHsnCode('');
+                setUom('');
+                setRate('');
+                setQty('');
+                console.log(purchaseList);
+
+            }
         }
 
     }
@@ -147,64 +213,71 @@ export default function AddPurchase() {
 
 
     const handleSubmit = async () => {
+        let item: any;
+        let parsedList;
         console.log("Befor Api");
-        if (localStorage.getItem("PurchaseList")) {
-            const storedList = localStorage.getItem("PurchaseList");
-            let parsedList;
+        if (localStorage.getItem("PurchaserDetail") && localStorage.getItem("PurchaseList")) {
+            const storedList = localStorage.getItem("PurchaserDetail");
             if (storedList) {
                 try {
                     parsedList = JSON.parse(storedList);
+                    console.log(parsedList[0]['date']);
+                    
                     setPurchaseListData(parsedList);
                 } catch (error) {
                     console.log(error);
                 }
             }
+
+            const item1 = localStorage.getItem("PurchaseList");
+            if (item1) {
+                try {
+                    item = JSON.parse(item1);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
         }
         if (purchaseListData.length < 1) {
             alert("NO Data In purchase Table")
         } else {
-            purchaseListData.map(async (val, ind) => {
-                console.log("Map Data");
+            console.log("Map Data");
 
-                console.log(val['data']);
+            console.log(purchaseListData[0]['date']);
+            console.log(item);
+            
 
-                let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/addPurchase', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        date: (val['date']),
-                        gstType: (val['gstType']),
-                        invoiceNo: (val['invoiceNo']),
-                        supplierName: (val['value']),
-                        address: (val['address']),
-                        recieverName: (val['recieverName']),
-                        gstInvoiceNo: (val['gstInvoiceNo']),
-                        gstInvoiceDate: (val['gstInvoiceDate']),
-                        product: (val['productName']),
-                        company: (val['company']),
-                        size: (val['size']),
-                        materialType: (val['material']),
-                        hsnCode: (val['hsnCode']),
-                        uom: (val['uom']),
-                        rate: (val['rate']),
-                        qty: (val['qty']),
-                    })
-                }).then(res => res.json()).then(
-                    async data => {
-                        if (data.success == false) {
-                            console.log("Error");
-                        } else if (data.success == true) {
-                            console.log("Hello");
-                        }
+            let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/addPurchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    invoiceNo: "101",
+                    date: (purchaseListData[0]['date']),
+                    gstType: (purchaseListData[0]['gstType']),
+                    supplierName: (purchaseListData[0]['value']),
+                    address: (purchaseListData[0]['address']),
+                    recieverName: (purchaseListData[0]['recieverName']),
+                    gstInvoiceNo: (purchaseListData[0]['gstInvoiceNo']),
+                    gstInvoiceDate: (purchaseListData[0]['gstInvoiceDate']),
+                    item: item
+
+                })
+            }).then(res => res.json()).then(
+                async data => {
+                    if (data.success == false) {
+                        console.log("Error");
+                        alert("error")
+                    } else if (data.success == true) {
+                        console.log("Hello");
+                        localStorage.removeItem("PurchaseList");
+                        localStorage.removeItem("PurchaserDetail")
+                        router.push('/admin/purchase');
                     }
-                )
-                if (purchaseListData.length == ind + 1) {
-                    localStorage.removeItem("PurchaseList");
-                    router.push('/admin/purchase');
                 }
-            })
+            )
         }
     }
 
@@ -268,6 +341,23 @@ export default function AddPurchase() {
         )
     }
 
+
+    const getPurchaserDetail = () => {
+        if (localStorage.getItem("PurchaserDetail")) {
+            const storedList = localStorage.getItem("PurchaserDetail");
+            let parsedList;
+            if (storedList) {
+                try {
+                    parsedList = JSON.parse(storedList);
+                    setPurchaseList(parsedList);
+                } catch (error) {
+                    console.log(error);
+
+                }
+            }
+        }
+    }
+
     const getLocalData = () => {
         if (localStorage.getItem("PurchaseList")) {
             const storedList = localStorage.getItem("PurchaseList");
@@ -283,6 +373,8 @@ export default function AddPurchase() {
             }
         }
     }
+
+
 
 
     // Get Table Data
@@ -311,6 +403,7 @@ export default function AddPurchase() {
         getPurchase();
         getCompany();
         getAllItem();
+        getPurchaserDetail();
         getLocalData();
 
 
@@ -634,6 +727,7 @@ export default function AddPurchase() {
                 </Button>
 
             </div >
+
         </>
 
     )
