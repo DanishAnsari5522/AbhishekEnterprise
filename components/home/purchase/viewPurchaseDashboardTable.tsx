@@ -10,13 +10,15 @@ export default function PurchaseDashboardViewTable() {
     const data = router.query;
     const supplierName = data.supplierName;
     const recieverName = data.recieverName;
+    const id = data.id;
+
     let total = 0;
 
 
     const getBusiness = async () => {
         console.log("Befor Api");
 
-        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/getAllPurchase', {
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/getPurchaseById?id=${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,15 +29,12 @@ export default function PurchaseDashboardViewTable() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    var data1 = data.message.reverse();
-                    // setUsers(data.message);
+                    // var data1 = data.message.reverse();
+                    // console.log(data.message);
+                    // console.log(data.message.item);
 
-                    const unique2 = (data.message).filter((obj: any, index: any) => {
-                        return obj.supplierName === supplierName && obj.recieverName == recieverName && obj.approvedByAdmin == false
-                    });
 
-                    // console.log(unique2);
-                    setUsers(unique2);
+                    setUsers(data.message.item);
                 }
             }
         )
@@ -43,8 +42,6 @@ export default function PurchaseDashboardViewTable() {
 
     const handleUpdate = async (idUpdate: any) => {
         console.log("Befor Api");
-
-
 
         let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${idUpdate}`, {
             method: 'PATCH',
@@ -134,7 +131,17 @@ export default function PurchaseDashboardViewTable() {
                 })
             }
 
-            <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+            {total > 0 && <div className="flex items-center justify-between">
+                <div className="gap-4 ml-4">
+                    <Button color="success" size="sm" className="text-white" onClick={() => handleUpdate(id)}>
+                        Freez
+                    </Button>
+                    <Button color="danger" size="sm" className="ml-2">
+                        Cancel
+                    </Button>
+                </div>
+                <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+            </div>}
 
             <Table
                 aria-label="Example table with client side pagination"
@@ -172,8 +179,8 @@ export default function PurchaseDashboardViewTable() {
                     {(item) => (
                         <TableRow key={1}>
                             <TableCell>{getKeyValue(item, 'date')}</TableCell>
-                            <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
-                            <TableCell>{getKeyValue(item, 'recieverName')}</TableCell>
+                            <TableCell>{supplierName}</TableCell>
+                            <TableCell>{recieverName}</TableCell>
                             <TableCell>
                                 {getKeyValue(item, 'product')} ,
                                 {getKeyValue(item, 'company')} ,

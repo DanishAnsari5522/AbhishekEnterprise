@@ -134,7 +134,13 @@ export default function PurchaseDashboardTable() {
 
                             </TableCell>
                             <TableCell>
-                                <Button color="primary" size="sm" onClick={() => { router.push({ pathname: 'admin/viewPurchaseDashboardTable', query: { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName') } }) }}>View</Button>
+                                <Button color="primary" size="sm" onClick={() => {
+                                    router.push({
+                                        pathname: 'admin/viewPurchaseDashboardTable', query: {
+                                            supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id')
+                                        }
+                                    })
+                                }}>View</Button>
                             </TableCell>
                         </TableRow>
                     )}

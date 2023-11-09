@@ -64,7 +64,7 @@ export default function PurchaseTable() {
     return (
         <>
             {
-                usersData.map((val) => {
+                users.map((val) => {
                     if (val['approvedByAdmin'] == false) {
                         return
                     }
@@ -119,8 +119,9 @@ export default function PurchaseTable() {
                             <TableCell>{getKeyValue(item, 'recieverName')}</TableCell>
                             <TableCell>
                                 {/* Map usersData and transform the data to return React nodes */}
-                                {usersData.map((val) => {
-                                    if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                {getKeyValue(item, 'item').map((val: any) => {
+                                    // if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                    if (getKeyValue(item, 'approvedByAdmin') == true) {
                                         // grossTotal += parseInt(val['rate']);
                                         grossTotal += ((parseInt(val['qty']) * parseInt(val['rate']) / 100) * 12) + (parseInt(val['qty']) * parseInt(val['rate']))
                                         console.log("for", grossTotal);
@@ -136,7 +137,12 @@ export default function PurchaseTable() {
 
                             </TableCell>
                             <TableCell>
-                                <Button color="primary" size="sm" onClick={() => { router.push({ pathname: '/admin/report/purchase/viewPurchase', query: { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName') } }) }}>View</Button>
+                                <Button color="primary" size="sm" onClick={() => {
+                                    router.push({
+                                        pathname: '/admin/report/purchase/viewPurchase', query:
+                                            { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id') }
+                                    })
+                                }}>View</Button>
                             </TableCell>
                         </TableRow>
                     )}
