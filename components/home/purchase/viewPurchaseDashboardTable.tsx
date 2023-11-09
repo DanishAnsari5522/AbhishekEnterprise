@@ -78,7 +78,7 @@ export default function PurchaseDashboardViewTable() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    getBusiness();
+                    router.push('/');
                 }
             }
         )
@@ -136,7 +136,7 @@ export default function PurchaseDashboardViewTable() {
                     <Button color="success" size="sm" className="text-white" onClick={() => handleUpdate(id)}>
                         Freez
                     </Button>
-                    <Button color="danger" size="sm" className="ml-2">
+                    <Button color="danger" size="sm" className="ml-2" onClick={() => { deleteBusiness(id) }}>
                         Cancel
                     </Button>
                 </div>
