@@ -31,6 +31,8 @@ export default function AddPayVoucher() {
     const [purchaseList, setPurchaseList] = useState<PurchaseItem[]>([]);
     const [purchaseListData, setPurchaseListData] = useState([])
     const [visiblity, setVisiblity] = useState(false)
+    const [page, setPage] = React.useState(1);
+
 
     const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
 
@@ -45,6 +47,7 @@ export default function AddPayVoucher() {
 
     const [value, setValue] = useState('Select Supplier');
     const [users, setUsers] = useState([]);
+    const [purchaser, setPurchaser] = useState([]);
     const [companyData, setCompanyData] = useState([]);
     const [allItem, setAllItem] = useState([]);
 
@@ -59,6 +62,8 @@ export default function AddPayVoucher() {
     const [gstType, setGstType] = useState('');
     const [invoiceNo, setInvoiceNo] = useState('');
     const [address, setAddress] = useState('');
+    const [state, setState] = useState('');
+    const [accountNo, setAccountNo] = useState('');
     const [recieverName, setRecieverName] = useState('');
     const [gstInvoiceNo, setGstInvoiceNo] = useState('');
     const [gstInvoiceDate, setGstInvoiceDate] = useState('');
@@ -200,7 +205,7 @@ export default function AddPayVoucher() {
         }
     }
 
-    const getPurchase = async () => {
+    const getSupplier = async () => {
         let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/supplier/getAllSupplier', {
             method: 'GET',
             headers: {
@@ -213,6 +218,24 @@ export default function AddPayVoucher() {
                 } else if (data.success == true) {
                     console.log("Hello");
                     setUsers(data.message);
+                }
+            }
+        )
+    }
+
+    const getPurchase = async () => {
+        let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/getAllPurchase', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    setPurchaser(data.message);
                 }
             }
         )
@@ -258,7 +281,22 @@ export default function AddPayVoucher() {
         )
     }
 
+
+    const rowsPerPage = 10;
+
+    const pages = Math.ceil(purchaser.length / rowsPerPage);
+
+    const items = React.useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return purchaser.slice(start, end);
+    }, [page, purchaser]);
+
+
+
     useEffect(() => {
+        getSupplier();
         getPurchase();
         getCompany();
         getAllItem();
@@ -343,7 +381,9 @@ export default function AddPayVoucher() {
 
                                 users.map((value1, index) => {
                                     if (value1['firmName'] == event.target.value) {
-                                        setAddress(value1['location'])
+                                        setAddress(value1['city'])
+                                        setState(value1['state'])
+                                        setAccountNo(value1['accountNo'])
                                     }
                                 })
                         }}
@@ -373,31 +413,26 @@ export default function AddPayVoucher() {
                         />
 
                         <Input
-                            isClearable
+                            disabled
                             className="w-[90%] sm:max-w-[100%]"
                             placeholder="State"
                             variant="bordered"
-                            value={recieverName}
-                            onChange={(e) => { setRecieverName(e.target.value) }}
+                            value={state}
+                            onChange={(e) => { setState(e.target.value) }}
                         />
                         <Input
-                            isClearable
+                            disabled
                             className="w-[90%] sm:max-w-[100%]"
                             placeholder="Account No."
                             variant="bordered"
-                            value={gstInvoiceNo}
-                            onChange={(e) => { setGstInvoiceNo(e.target.value) }}
+                            value={accountNo}
+                            onChange={(e) => { setAccountNo(e.target.value) }}
                         />
                     </div>
 
 
                     <Table
                         aria-label="Example table with client side pagination"
-                        selectionMode="multiple"
-                        selectedKeys={selectedKeys}
-                        // onSelectionChange={setSelectedKeys}
-
-
                         // bottomContent={
                         //     <div className="flex w-full justify-center">
                         //         <Pagination
@@ -416,58 +451,52 @@ export default function AddPayVoucher() {
                         }}
                     >
                         <TableHeader>
-                            <TableColumn key="date">Voucher No</TableColumn>
                             <TableColumn key="date">DATE</TableColumn>
-                            <TableColumn key="date">Paye Name</TableColumn>
-                            <TableColumn key="date">Pay to</TableColumn>
+                            <TableColumn key="invoiceNo">Invoice & Date</TableColumn>
+                            <TableColumn key="supplierName">Supplier Name</TableColumn>
                             <TableColumn key="address">Address</TableColumn>
-                            <TableColumn key="date">Gross Amount</TableColumn>
-                            <TableColumn key="date">Discount</TableColumn>
-                            <TableColumn key="date">Pay</TableColumn>
-                            <TableColumn key="date">Purchase Inv.</TableColumn>
-                            <TableColumn key="date">Date</TableColumn>
-                            <TableColumn key="action">Action</TableColumn>
+                            <TableColumn key="recieverName">Reciver Name</TableColumn>
+                            <TableColumn key="rate">Gross Amt.</TableColumn>
+                            <TableColumn key="action">View Product</TableColumn>
 
                         </TableHeader>
-                        <TableBody >
+                        <TableBody items={items}>
+                            {(item, grossTotal = 0) => (
+                                <TableRow key={1}>
+                                    <TableCell>{getKeyValue(item, 'date')}</TableCell>
+                                    <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
+                                    <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
+                                    <TableCell>{getKeyValue(item, 'address')}</TableCell>
+                                    <TableCell>{getKeyValue(item, 'recieverName')}</TableCell>
+                                    <TableCell>
+                                        {/* Map usersData and transform the data to return React nodes */}
+                                        {getKeyValue(item, 'item').map((val: any) => {
+                                            // if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                            if (getKeyValue(item, 'approvedByAdmin') == true) {
+                                                // grossTotal += parseInt(val['rate']);
+                                                grossTotal += ((parseInt(val['qty']) * parseInt(val['rate']) / 100) * 12) + (parseInt(val['qty']) * parseInt(val['rate']))
+                                                console.log("for", grossTotal);
+                                            }
 
-                            <TableRow key={1}>
-                                <TableCell>hii1</TableCell>
-                                <TableCell>hii2</TableCell>
-                                <TableCell>hii3</TableCell>
-                                <TableCell>
-                                    {/* {getKeyValue(item, 'address')} */}
-                                    hii4
-                                </TableCell>
-                                <TableCell>hii5</TableCell>
-                                <TableCell>hii6</TableCell>
-                                <TableCell>hii7</TableCell>
-                                <TableCell>hii8</TableCell>
-                                <TableCell>hii9</TableCell>
-                                <TableCell>hii0</TableCell>
-                                <TableCell>
-                                    <Button color="primary" size="sm">View</Button>
-                                </TableCell>
-                            </TableRow>
+                                            return null; // Return null if you don't want to render anything in this case
+                                        })
+                                        }
+                                        {
+                                            grossTotal
+                                        }
 
-                            <TableRow key={1}>
-                                <TableCell>hii1</TableCell>
-                                <TableCell>hii2</TableCell>
-                                <TableCell>hii3</TableCell>
-                                <TableCell>
-                                    {/* {getKeyValue(item, 'address')} */}
-                                    hii4
-                                </TableCell>
-                                <TableCell>hii5</TableCell>
-                                <TableCell>hii6</TableCell>
-                                <TableCell>hii7</TableCell>
-                                <TableCell>hii8</TableCell>
-                                <TableCell>hii9</TableCell>
-                                <TableCell>hii0</TableCell>
-                                <TableCell>
-                                    <Button color="primary" size="sm">View</Button>
-                                </TableCell>
-                            </TableRow>
+
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button color="primary" size="sm" onClick={() => {
+                                            router.push({
+                                                pathname: '/admin/report/purchase/viewPurchase', query:
+                                                    { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id') }
+                                            })
+                                        }}>View</Button>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
 
