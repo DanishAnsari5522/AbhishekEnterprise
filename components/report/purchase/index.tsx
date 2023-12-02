@@ -34,7 +34,7 @@ export default function PurchaseTable() {
                         return index === (data.message).findIndex((o: any) => obj.supplierName === o.supplierName && obj.recieverName == o.recieverName && o.approvedByAdmin == true);
                     });
 
-                    // console.log(unique2);
+                    console.log(unique2);
                     setUsers(unique2);
                 }
             }

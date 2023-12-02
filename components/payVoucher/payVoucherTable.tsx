@@ -21,8 +21,16 @@ export default function PayVoucherTable() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    var data1 = data.message.reverse();
-                    setUsers(data.message);
+                    // var data1 = data.message.reverse();
+                    // setUsers(data.message);
+                    const unique2 = (data.message).filter((obj: any, index: any) => {
+                        if (obj.paymentStatus == true && obj.payment == false) {
+                            return (
+                                obj
+                            );
+                        }
+                    });
+                    setUsers(unique2);
                 }
             }
         )

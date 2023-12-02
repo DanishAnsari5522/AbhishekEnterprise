@@ -32,9 +32,9 @@ export default function AddPayVoucher() {
     const [purchaseListData, setPurchaseListData] = useState([])
     const [visiblity, setVisiblity] = useState(false)
     const [page, setPage] = React.useState(1);
+    const [selectedKeys, setSelectedKeys] = useState([]);
 
-
-    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
+    // const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
 
 
     // +++++++++++++++++++++++++++++++++++++++++ Select Start +++++++++++++++++++++++++++++++++++++++++++++
@@ -75,9 +75,37 @@ export default function AddPayVoucher() {
 
     const [rate, setRate] = useState('');
     const [qty, setQty] = useState('');
+
     // +++++++++++++++++++++++++++++++++++++++++ UseSate ENd +++++++++++++++++++++++++++++++++++++++++++++++
+    const [forId, setForID] = useState<string[]>([]);
 
     const handleList = async () => {
+        // console.log(Object.values(selectedKeys));
+        console.log(selectedKeys);
+
+
+        forId.map(async (val, ind) => {
+            console.log("Befor Api");
+
+            let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${val}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ paymentStatus: true })
+            }).then(res => res.json()).then(
+                async data => {
+                    if (data.success == false) {
+                        console.log("Error");
+                    } else if (data.success == true) {
+                        console.log("Hello");
+                        router.push('/admin/payVoucher');
+
+                    }
+                }
+            )
+        })
+
         if (!invoiceNo) {
             setError("invoiceNo Required");
         } else if (!date) {
@@ -223,7 +251,7 @@ export default function AddPayVoucher() {
         )
     }
 
-    const getPurchase = async () => {
+    const getPurchase = async (firmName: any) => {
         let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/getAllPurchase', {
             method: 'GET',
             headers: {
@@ -235,11 +263,18 @@ export default function AddPayVoucher() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setPurchaser(data.message);
+                    const unique2 = (data.message).filter((obj: any, index: any) => {
+                        console.log(index);
+                        if (obj.supplierName == firmName && obj.payment == false && obj.paymentStatus == false) {
+                            return (
+                                obj
+                            );
+                        }
+                    });
+                    setPurchaser(unique2);
                 }
             }
         )
-
     }
 
     const getCompany = async () => {
@@ -297,7 +332,7 @@ export default function AddPayVoucher() {
 
     useEffect(() => {
         getSupplier();
-        getPurchase();
+        // getPurchase();
         getCompany();
         getAllItem();
 
@@ -316,6 +351,55 @@ export default function AddPayVoucher() {
         }
     }, [])
 
+    // const [forId, setForID] = useState([]);
+
+
+    // const handleChange = (e: string) => {
+    //     alert(e)
+    //     console.log(e);
+    //     if (e in forId) {
+    //         forId.pop(e)
+    //     } else {
+    //         forId.push(e);
+    //     }
+    // }
+
+
+    const handleChange = (e: string) => {
+        // alert(e);
+        // console.log(e);
+
+        // Check if the element is already in the array
+        if (forId.includes(e)) {
+            // If it is, create a new array without the element
+            // const updatedForId = forId.filter((id) => id == e);
+            // setForID(updatedForId);
+            // console.log(updatedForId);
+
+            console.log('same id');
+
+            const unique2: any = forId.filter((obj: any, index: any) => {
+                console.log(index);
+                if (obj != e) {
+                    return (
+                        obj
+                    );
+                }
+            });
+            setForID(unique2);
+            console.log(unique2);
+            
+        } else {
+            // If it's not, create a new array with the element
+            // const updatedForId = [...forId, e];
+            // setForID(updatedForId);
+            forId.push(e)
+        }
+        console.log(forId);
+
+        // alert(forId)
+
+    };
 
     return (
         <>
@@ -378,14 +462,16 @@ export default function AddPayVoucher() {
 
                         <select name="cars" id="cars" onChange={event => {
                             setValue(event.target.value),
+                                setForID([])
 
-                                users.map((value1, index) => {
-                                    if (value1['firmName'] == event.target.value) {
-                                        setAddress(value1['city'])
-                                        setState(value1['state'])
-                                        setAccountNo(value1['accountNo'])
-                                    }
-                                })
+                            users.map((value1, index) => {
+                                if (value1['firmName'] == event.target.value) {
+                                    setAddress(value1['city'])
+                                    setState(value1['state'])
+                                    setAccountNo(value1['accountNo'])
+                                    getPurchase(value1['firmName'])
+                                }
+                            })
                         }}
                             defaultValue={value}
                             style={{ border: '1px solid gray', borderColor: '#e7e7e7', borderWidth: 2.5, padding: '6px 10px', borderRadius: 10, maxWidth: '200px' }}
@@ -432,6 +518,7 @@ export default function AddPayVoucher() {
 
 
                     <Table
+
                         aria-label="Example table with client side pagination"
                         // bottomContent={
                         //     <div className="flex w-full justify-center">
@@ -451,18 +538,21 @@ export default function AddPayVoucher() {
                         }}
                     >
                         <TableHeader>
+                            <TableColumn key="id">c</TableColumn>
                             <TableColumn key="date">DATE</TableColumn>
                             <TableColumn key="invoiceNo">Invoice & Date</TableColumn>
                             <TableColumn key="supplierName">Supplier Name</TableColumn>
                             <TableColumn key="address">Address</TableColumn>
                             <TableColumn key="recieverName">Reciver Name</TableColumn>
                             <TableColumn key="rate">Gross Amt.</TableColumn>
-                            <TableColumn key="action">View Product</TableColumn>
 
                         </TableHeader>
                         <TableBody items={items}>
                             {(item, grossTotal = 0) => (
-                                <TableRow key={1}>
+                                <TableRow key={getKeyValue(item, '_id')}>
+                                    <TableCell>
+                                        <input type='checkbox' className='p-3' name={getKeyValue(item, '_id')} onChange={() => handleChange(getKeyValue(item, '_id'))} />
+                                    </TableCell>
                                     <TableCell>{getKeyValue(item, 'date')}</TableCell>
                                     <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
                                     <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
@@ -484,27 +574,11 @@ export default function AddPayVoucher() {
                                         {
                                             grossTotal
                                         }
-
-
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button color="primary" size="sm" onClick={() => {
-                                            router.push({
-                                                pathname: '/admin/report/purchase/viewPurchase', query:
-                                                    { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id') }
-                                            })
-                                        }}>View</Button>
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
-
-
-
-
-
-
                     <Button color="success" className='text-white ml-2' onClick={handleList}>
                         Add
                     </Button>
