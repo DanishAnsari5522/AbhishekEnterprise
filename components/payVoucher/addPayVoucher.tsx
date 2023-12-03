@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button, Link } from "@nextui-org/react";
 import { useRouter } from 'next/router';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 interface PurchaseItem {
     date: string;
@@ -25,6 +26,9 @@ interface PurchaseItem {
 
 
 
+
+
+
 export default function AddPayVoucher() {
     const router = useRouter()
     const [error, setError] = useState('');
@@ -35,6 +39,10 @@ export default function AddPayVoucher() {
     const [selectedKeys, setSelectedKeys] = useState([]);
 
     // const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [forModal, setForModal] = useState();
+    const [forModalName, setForModalName] = useState();
 
 
     // +++++++++++++++++++++++++++++++++++++++++ Select Start +++++++++++++++++++++++++++++++++++++++++++++
@@ -67,6 +75,8 @@ export default function AddPayVoucher() {
     const [recieverName, setRecieverName] = useState('');
     const [gstInvoiceNo, setGstInvoiceNo] = useState('');
     const [gstInvoiceDate, setGstInvoiceDate] = useState('');
+
+    const [discount, setDiscount] = useState('');
 
 
 
@@ -165,6 +175,31 @@ export default function AddPayVoucher() {
 
         }
 
+    }
+
+
+    const handleDiscount = async (id: any) => {
+        alert(id)
+        alert(discount)
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ discount: discount })
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+
+                    getPurchase(forModalName);
+                    onclose;
+                }
+            }
+        )
     }
 
 
@@ -388,7 +423,7 @@ export default function AddPayVoucher() {
             });
             setForID(unique2);
             console.log(unique2);
-            
+
         } else {
             // If it's not, create a new array with the element
             // const updatedForId = [...forId, e];
@@ -470,6 +505,7 @@ export default function AddPayVoucher() {
                                     setState(value1['state'])
                                     setAccountNo(value1['accountNo'])
                                     getPurchase(value1['firmName'])
+                                    setForModalName(value1['firmName'])
                                 }
                             })
                         }}
@@ -518,21 +554,7 @@ export default function AddPayVoucher() {
 
 
                     <Table
-
                         aria-label="Example table with client side pagination"
-                        // bottomContent={
-                        //     <div className="flex w-full justify-center">
-                        //         <Pagination
-                        //             isCompact
-                        //             showControls
-                        //             showShadow
-                        //             color="secondary"
-                        //             page={page}
-                        //             total={pages}
-                        //             onChange={(page) => setPage(page)}
-                        //         />
-                        //     </div>
-                        // }
                         classNames={{
                             wrapper: "min-h-[222px]",
                         }}
@@ -545,7 +567,8 @@ export default function AddPayVoucher() {
                             <TableColumn key="address">Address</TableColumn>
                             <TableColumn key="recieverName">Reciver Name</TableColumn>
                             <TableColumn key="rate">Gross Amt.</TableColumn>
-
+                            <TableColumn key="discount">Discount</TableColumn>
+                            <TableColumn key='Update'>Update</TableColumn>
                         </TableHeader>
                         <TableBody items={items}>
                             {(item, grossTotal = 0) => (
@@ -575,6 +598,14 @@ export default function AddPayVoucher() {
                                             grossTotal
                                         }
                                     </TableCell>
+                                    <TableCell>
+                                        {getKeyValue(item, 'discount')}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button size="sm" color="success" onPress={() => { onOpen(), setForModal(getKeyValue(item, '_id')) }} >
+                                            Update
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
@@ -583,7 +614,35 @@ export default function AddPayVoucher() {
                         Add
                     </Button>
                 </div>
-            </div >
+            </div>
+
+
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} className='Z-[99999999999999]'>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Modal {forModalName} {forModal}</ModalHeader>
+                            <ModalBody>
+                                <Input
+                                    className="w-[100%]"
+                                    placeholder="Add Discount"
+                                    variant="bordered"
+                                    value={discount}
+                                    onChange={(e) => { setDiscount(e.target.value) }}
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button color="primary" onClick={() => { handleDiscount(forModal), setTimeout(onClose, 3000) }} >
+                                    Update
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </>
 
     )
