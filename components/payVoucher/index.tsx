@@ -15,7 +15,7 @@ export default function PayVoucher() {
                     <div></div>
                     <div className='text-center text-3xl font-medium py-2'>PayVoucher</div>
                     <div className='py-2'>
-                        <Button color="success" className='text-white' onClick={() => { router.push('/admin/payVoucher/addPayVoucher') }}>
+                        <Button color="success" size="sm" className='text-white' onClick={() => { router.push('/admin/payVoucher/addPayVoucher') }}>
                             Add Payment
                         </Button>
                     </div>

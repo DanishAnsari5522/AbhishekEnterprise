@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
 import { EyeIcon } from "../icons/table/eye-icon";
+import { useRouter } from "next/router";
 
 export default function PayVoucherTable() {
     const [page, setPage] = React.useState(1);
-
+    const router = useRouter();
     const [users, setUsers] = useState([]);
 
     const getBusiness = async () => {
@@ -91,20 +92,45 @@ export default function PayVoucherTable() {
 
             </TableHeader>
             <TableBody items={items}>
-                {(item) => (
+                {(item, grossTotal = 0) => (
                     <TableRow key={1}>
-                        <TableCell>{getKeyValue(item, 'date')}</TableCell>
                         <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'address')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
                         <TableCell>{getKeyValue(item, 'date')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
                         <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'recieverName')}</TableCell>
                         <TableCell>{getKeyValue(item, 'address')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
                         <TableCell>
-                            <Button color="primary" size="sm">View</Button>
+                            {/* {getKeyValue(item, 'date')} */}
+                            {/* Map usersData and transform the data to return React nodes */}
+                            {getKeyValue(item, 'item').map((val: any) => {
+                                // if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                if (getKeyValue(item, 'approvedByAdmin') == true) {
+                                    // grossTotal += parseInt(val['rate']);
+                                    grossTotal += ((parseInt(val['qty']) * parseInt(val['rate']) / 100) * 12) + (parseInt(val['qty']) * parseInt(val['rate']))
+                                    console.log("for", grossTotal);
+                                }
+
+                                return null; // Return null if you don't want to render anything in this case
+                            })
+                            }
+                            {
+                                grossTotal
+                            }
+                        </TableCell>
+                        <TableCell>{getKeyValue(item, 'discount')}</TableCell>
+                        <TableCell>
+                            {grossTotal - getKeyValue(item, 'discount')}
+                        </TableCell>
+                        <TableCell>{getKeyValue(item, 'address')}</TableCell>
+                        <TableCell>{getKeyValue(item, 'date')}</TableCell>
+                        <TableCell>
+                            <Button color="primary" size="sm"
+                                onClick={() => {
+                                    router.push({
+                                        pathname: '/admin/payVoucher/viewPayVoucher', query:
+                                            { supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id') }
+                                    })
+                                }}>View</Button>
                         </TableCell>
                     </TableRow>
                 )}
