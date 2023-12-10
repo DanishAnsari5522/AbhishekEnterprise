@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
 import { EyeIcon } from "../icons/table/eye-icon";
+import { useRouter } from "next/router";
+
 
 export default function PurchaseTable() {
+    const router = useRouter();
     const [page, setPage] = React.useState(1);
 
     const [users, setUsers] = useState([]);
@@ -86,7 +89,14 @@ export default function PurchaseTable() {
                         <TableCell>{getKeyValue(item, 'address')}</TableCell>
                         <TableCell>{getKeyValue(item, 'rate')}</TableCell>
                         <TableCell>
-                            <Button color="primary" size="sm">View</Button>
+                            <Button color="primary" size="sm"
+                                onClick={() => {
+                                    router.push({
+                                        pathname: '/admin/purchase/viewPurchaseTable', query: {
+                                            supplierName: getKeyValue(item, 'supplierName'), recieverName: getKeyValue(item, 'recieverName'), id: getKeyValue(item, '_id')
+                                        }
+                                    })
+                                }}>View</Button>
                         </TableCell>
                     </TableRow>
                 )}

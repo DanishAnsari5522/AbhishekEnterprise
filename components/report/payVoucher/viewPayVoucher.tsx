@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
-export default function ViewPayVoucher() {
+export default function ViewPayVoucherReport() {
     const router = useRouter();
     const [page, setPage] = React.useState(1);
     const [users, setUsers] = useState([]);
@@ -99,8 +99,8 @@ export default function ViewPayVoucher() {
         <>
             <div className='justify-items-end text-end flex flex-row justify-between pt-4'>
                 <div></div>
-                <div className='text-center text-3xl font-medium '>PayVoucher List</div>
-                <Button color="danger" size="sm" onClick={() => { router.push('/admin/payVoucher') }}>
+                <div className='text-center text-3xl font-medium '>PayVoucher List Report</div>
+                <Button color="danger" size="sm" onClick={() => { router.push('/admin/report') }}>
                     Back
                 </Button>
             </div>
@@ -186,18 +186,6 @@ export default function ViewPayVoucher() {
                     )}
                 </TableBody>
             </Table>
-
-
-
-            <div className="mt-4">
-                <Button color="success" size="sm" onClick={handleFreze} className="mr-8 ml-2">
-                    Freze
-                </Button>
-
-                <Button color="danger" size="sm" onClick={handleCancel}>
-                    Cancel
-                </Button>
-            </div>
         </>
     );
 }

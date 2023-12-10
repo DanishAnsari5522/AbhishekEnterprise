@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
-export default function ViewPayVoucher() {
+export default function ViewPurchaseTable() {
     const router = useRouter();
     const [page, setPage] = React.useState(1);
     const [users, setUsers] = useState([]);
@@ -11,47 +11,8 @@ export default function ViewPayVoucher() {
     const supplierName = data.supplierName;
     const recieverName = data.recieverName;
     const id = data.id;
+
     let total = 0;
-
-    const handleFreze = async () => {
-
-        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ payment: true })
-        }).then(res => res.json()).then(
-            async data => {
-                if (data.success == false) {
-                    console.log("Error");
-                } else if (data.success == true) {
-                    console.log("Hello");
-                    onclose;
-                }
-            }
-        )
-    }
-
-    const handleCancel = async (id: any) => {
-
-        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ paymentStatus: false })
-        }).then(res => res.json()).then(
-            async data => {
-                if (data.success == false) {
-                    console.log("Error");
-                } else if (data.success == true) {
-                    console.log("Hello");
-                    onclose;
-                }
-            }
-        )
-    }
 
 
     const getBusiness = async () => {
@@ -68,12 +29,64 @@ export default function ViewPayVoucher() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
+                    // var data1 = data.message.reverse();
+                    // console.log(data.message);
+                    // console.log(data.message.item);
+
+
                     setUsers(data.message.item);
-                    console.log(data.message.item);
                 }
             }
         )
     }
+
+    const handleUpdate = async (idUpdate: any) => {
+        console.log("Befor Api");
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${idUpdate}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ approvedByAdmin: true })
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    router.push('/');
+
+                }
+            }
+        )
+    }
+
+    const deleteBusiness = async (id: any) => {
+        console.log("Befor Api");
+        console.log(id);
+        alert('Are You sure you want to delete this record..?')
+
+        let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/deletePurchase?id=${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(
+            async data => {
+                if (data.success == false) {
+                    console.log("Error");
+                } else if (data.success == true) {
+                    console.log("Hello");
+                    router.push('/');
+                }
+            }
+        )
+    }
+
+
+
+
 
 
     useEffect(() => {
@@ -99,8 +112,8 @@ export default function ViewPayVoucher() {
         <>
             <div className='justify-items-end text-end flex flex-row justify-between pt-4'>
                 <div></div>
-                <div className='text-center text-3xl font-medium '>PayVoucher List</div>
-                <Button color="danger" size="sm" onClick={() => { router.push('/admin/payVoucher') }}>
+                <div className='text-center text-3xl font-medium '>Purchase List</div>
+                <Button color="danger" onClick={() => { router.push('/admin/purchase') }}>
                     Back
                 </Button>
             </div>
@@ -118,7 +131,17 @@ export default function ViewPayVoucher() {
                 })
             }
 
-            <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+            {/* {total > 0 && <div className="flex items-center justify-between">
+                <div className="gap-4 ml-4">
+                    <Button color="success" size="sm" className="text-white" onClick={() => handleUpdate(id)}>
+                        Freez
+                    </Button>
+                    <Button color="danger" size="sm" className="ml-2" onClick={() => { deleteBusiness(id) }}>
+                        Cancel
+                    </Button>
+                </div>
+                <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+            </div>} */}
 
             <Table
                 aria-label="Example table with client side pagination"
@@ -150,7 +173,7 @@ export default function ViewPayVoucher() {
                     <TableColumn key="amount">Amount</TableColumn>
                     <TableColumn key="gst">Gst</TableColumn>
                     <TableColumn key="gross">Gross Amount</TableColumn>
-
+                    <TableColumn key="Action">Action</TableColumn>
                 </TableHeader>
                 <TableBody items={items}>
                     {(item) => (
@@ -163,7 +186,6 @@ export default function ViewPayVoucher() {
                                 {getKeyValue(item, 'company')} ,
                                 {getKeyValue(item, 'size')}
                             </TableCell>
-                            {/* <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell> */}
                             <TableCell>{getKeyValue(item, 'hsnCode')}</TableCell>
                             <TableCell>{getKeyValue(item, 'rate')}</TableCell>
                             <TableCell>{getKeyValue(item, 'qty')}</TableCell>
@@ -182,22 +204,21 @@ export default function ViewPayVoucher() {
                                     ((parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')) / 100) * 12) + (parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')))
                                 }
                             </TableCell>
+                            <TableCell className="flex">
+                                {/* <Button color="success" size="sm" className="p-0 m-0" style={{ padding: 0 }} onClick={() => handleUpdate(getKeyValue(item, '_id'))}>
+                                    V
+                                </Button>
+                                <Button color="danger" size="sm" onClick={() => { deleteBusiness(getKeyValue(item, '_id')) }}>
+                                    X
+                                </Button> */}
+                                <Button color="success" size="sm" className="p-0 m-0" style={{ padding: 0 }} >
+                                    Update
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     )}
                 </TableBody>
             </Table>
-
-
-
-            <div className="mt-4">
-                <Button color="success" size="sm" onClick={handleFreze} className="mr-8 ml-2">
-                    Freze
-                </Button>
-
-                <Button color="danger" size="sm" onClick={handleCancel}>
-                    Cancel
-                </Button>
-            </div>
         </>
     );
 }

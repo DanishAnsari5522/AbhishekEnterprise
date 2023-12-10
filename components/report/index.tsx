@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import PurchaseTable from './purchase';
 import Stock from './stock';
 import SupplierTable from './supplier';
+import PayVoucherReport from './payVoucher';
 
 
 export default function Report() {
@@ -52,7 +53,7 @@ export default function Report() {
                                             item.id == "Stock" ? <><p className='text-center'>Stock</p> <Stock /></> :
                                                 item.id == "Purchase" ? <> <p className='text-center'>Purchase</p> <PurchaseTable /></> :
                                                     item.id == "Supplier" ? <> <p className='text-center'>Supplier</p><SupplierTable /> </> :
-                                                        item.id == "Pay Voucher" ? <p className='text-center'>Pay Voucher</p> :
+                                                        item.id == "Pay Voucher" ? <><p className='text-center'>Pay Voucher</p><PayVoucherReport /> </> :
                                                             <p></p>
                                     }
                                 </CardBody>
