@@ -109,7 +109,26 @@ export default function AddCompany() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setUsers(data.message);
+                    // setUsers(data.message);
+
+                    const unique2 = (data.message).filter((item: any, index: any) => {
+                        return (data.message).indexOf(item) === index;
+                    });
+
+                    const filterArray = (data.message).filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                            t.name === value.name
+                        ))
+                    )
+
+                    console.log(filterArray);
+
+
+
+                    setUsers(filterArray)
+                    console.log(unique2);
+
+
                 }
             }
         )

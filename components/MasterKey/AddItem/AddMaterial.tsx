@@ -17,6 +17,8 @@ export default function AddMaterial() {
     // for dropdown
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
+    const [companyDataForSize, setCompanyDataForSize] = useState([]);
+
 
     const [toggle, setToggle] = useState(false);
     const [idUpdate, setIdUpdate] = useState('');
@@ -76,7 +78,15 @@ export default function AddMaterial() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setUsers(data.message);
+                    // setUsers(data.message);
+                    const filterArray = (data.message).filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                            t.name === value.name
+                        ))
+                    )
+
+                    console.log(filterArray);
+                    setUsers(filterArray)
                 }
             }
         )
@@ -94,7 +104,23 @@ export default function AddMaterial() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setCompanyData(data.message);
+                    // setCompanyData(data.message);
+                    setCompanyDataForSize(data.message);
+
+                    console.log('Company');
+
+                    console.log(data.message);
+
+
+                    const filterArray = (data.message).filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                            t.companyName === value.companyName && t.productName === value.productName
+                        ))
+                    )
+
+                    console.log(filterArray);
+                    setCompanyData(filterArray);
+
                 }
             }
         )
@@ -182,7 +208,8 @@ export default function AddMaterial() {
 
     useEffect(() => {
         getProduct()
-        getCompany();
+        // getCompany();.+
+
     }, [])
 
     return (
@@ -243,10 +270,10 @@ export default function AddMaterial() {
                             >
                                 <option className='font-medium'>Select size</option>
                                 {
-                                    companyData.map((value) => (
+                                    companyDataForSize.map((value) => (
                                         <>
                                             {
-                                                value['productName'] == productName && value['companyName'] == company && <option>{value['size']}</option>
+                                                value['productName'] == productName && value['companyName'] == company ? <option>{value['size']}</option>:<p></p>
                                             }
                                         </>
                                     ))

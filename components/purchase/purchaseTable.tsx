@@ -25,6 +25,8 @@ export default function PurchaseTable() {
                 } else if (data.success == true) {
                     console.log("Hello");
                     var data1 = data.message.reverse();
+                    console.log(data.message);
+                    
                     setUsers(data.message);
                 }
             }
@@ -81,13 +83,30 @@ export default function PurchaseTable() {
 
             </TableHeader>
             <TableBody items={items}>
-                {(item) => (
+                {(item,grossTotal = 0) => (
                     <TableRow key={1}>
                         <TableCell>{getKeyValue(item, 'date')}</TableCell>
                         <TableCell>{getKeyValue(item, 'invoiceNo')}</TableCell>
                         <TableCell>{getKeyValue(item, 'supplierName')}</TableCell>
                         <TableCell>{getKeyValue(item, 'address')}</TableCell>
-                        <TableCell>{getKeyValue(item, 'rate')}</TableCell>
+                        <TableCell>
+                             {/* Map usersData and transform the data to return React nodes */}
+                             {getKeyValue(item, 'item').map((val: any) => {
+                                    // if (getKeyValue(item, 'supplierName') === val['supplierName'] && getKeyValue(item, 'recieverName') === val['recieverName'] && val['approvedByAdmin'] == true) {
+                                    // if (getKeyValue(item, 'approvedByAdmin') == true) {
+                                        // grossTotal += parseInt(val['rate']);
+                                        grossTotal += ((parseInt(val['qty']) * parseInt(val['rate']) / 100) * 12) + (parseInt(val['qty']) * parseInt(val['rate']))
+                                        console.log("for", grossTotal);
+                                    // }
+
+                                    return null; // Return null if you don't want to render anything in this case
+                                })
+                                }
+                                {
+                                    grossTotal
+                                }
+
+                        </TableCell>
                         <TableCell>
                             <Button color="primary" size="sm"
                                 onClick={() => {

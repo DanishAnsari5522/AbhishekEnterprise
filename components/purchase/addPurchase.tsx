@@ -43,6 +43,7 @@ export default function AddPurchase() {
     const [users, setUsers] = useState([]);
     const [companyData, setCompanyData] = useState([]);
     const [allItem, setAllItem] = useState([]);
+    const [companyDataAll, setCompanyDataAll] = useState([]);
 
     const [uom, setUom] = useState('');
 
@@ -222,7 +223,7 @@ export default function AddPurchase() {
                 try {
                     parsedList = JSON.parse(storedList);
                     console.log(parsedList[0]['date']);
-                    
+
                     setPurchaseListData(parsedList);
                 } catch (error) {
                     console.log(error);
@@ -246,7 +247,7 @@ export default function AddPurchase() {
 
             console.log(purchaseListData[0]['date']);
             console.log(item);
-            
+
 
             let result = await fetch('https://abhishekenterprise-api.onrender.com/v1/purchase/addPurchase', {
                 method: 'POST',
@@ -293,7 +294,7 @@ export default function AddPurchase() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setUsers(data.message);
+                    setUsers(data.message)
                 }
             }
         )
@@ -312,7 +313,15 @@ export default function AddPurchase() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    setCompanyData(data.message);
+                    // setCompanyData(data.message);
+                    setCompanyDataAll(data.message);
+                    console.log(data.message);
+                    const filterArray = (data.message).filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                            t.name === value.name
+                        ))
+                    )
+                    setCompanyData(filterArray);
                 }
             }
         )
@@ -560,7 +569,7 @@ export default function AddPurchase() {
                             >
                                 <option className='font-medium'>Select Company</option>
                                 {
-                                    companyData.map((value) => (
+                                    companyDataAll.map((value) => (
                                         <>
                                             {
                                                 value['name'] == productName && <option>{value['company']}</option>
@@ -576,7 +585,7 @@ export default function AddPurchase() {
                             >
                                 <option className='font-medium'>Select size</option>
                                 {
-                                    companyData.map((value) => (
+                                    companyDataAll.map((value) => (
                                         <>
                                             {
                                                 value['name'] == productName && value['company'] == company && <option>{value['size']}</option>
@@ -592,7 +601,7 @@ export default function AddPurchase() {
 
                                 onChange={event => {
                                     setMaterial(event.target.value),
-                                        companyData.map((value1, ind) => {
+                                        companyDataAll.map((value1, ind) => {
                                             if (value1['name'] == productName && value1['company'] == company && value1['size'] == size && value1['materialType'] == event.target.value) {
                                                 setRate(value1['rate'])
                                             }
@@ -601,7 +610,7 @@ export default function AddPurchase() {
                             >
                                 <option className='font-medium'>Select Material</option>
                                 {
-                                    companyData.map((value) => (
+                                    companyDataAll.map((value) => (
 
                                         <>
                                             {
