@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button,Input } from "@nextui-org/react";
 import { useRouter } from "next/router";
+
 
 export default function ViewPayVoucher() {
     const router = useRouter();
@@ -186,6 +187,53 @@ export default function ViewPayVoucher() {
                     )}
                 </TableBody>
             </Table>
+
+
+            <div className='grid grid-cols-5 max-xl:grid-cols-3 max-md:grid-cols-2 gap-3 mt-4'>
+                        <Input
+                            isClearable
+                            className="w-full"
+                            placeholder="Accoutn Type"
+                            variant="bordered"
+                            // value={productName}
+                            // onChange={(e) => { setProductName(e.target.value) }}
+                        />
+
+                        <Input
+                            isClearable
+                            className="w-full"
+                            placeholder="Bank Account"
+                            variant="bordered"
+                            // value={gst}
+                            // onChange={(e) => { setGst(e.target.value) }}
+                        />
+
+                        <Input
+                            isClearable
+                            className="w-full"
+                            placeholder="Tranjection Type"
+                            variant="bordered"
+                            // value={hsnCode}
+                            // onChange={(e) => { setHsnCode(e.target.value) }}
+                        />
+
+                        <Input
+                            isClearable
+                            className="w-full"
+                            placeholder="Pay Account"
+                            variant="bordered"
+                            // value={uom}
+                            // onChange={(e) => { setUom(e.target.value) }}
+                        />
+                         <Input
+                            isClearable
+                            className="w-full"
+                            placeholder="Balance"
+                            variant="bordered"
+                            // value={uom}
+                            // onChange={(e) => { setUom(e.target.value) }}
+                        />
+                    </div>
 
 
 

@@ -37,6 +37,7 @@ export default function AddItem() {
                 async data => {
                     if (data.success == false) {
                         console.log("Error");
+                        setError(data.message);
                     } else if (data.success == true) {
                         console.log("Hello");
                         router.reload();
