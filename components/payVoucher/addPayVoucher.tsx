@@ -179,8 +179,8 @@ export default function AddPayVoucher() {
 
 
     const handleDiscount = async (id: any) => {
-        alert(id)
-        alert(discount)
+        // alert(id)
+        // alert(discount)
 
         let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${id}`, {
             method: 'PATCH',
@@ -300,7 +300,7 @@ export default function AddPayVoucher() {
                     console.log("Hello");
                     const unique2 = (data.message).filter((obj: any, index: any) => {
                         console.log(index);
-                        if (obj.supplierName == firmName && obj.payment == false && obj.paymentStatus == false) {
+                        if (obj.supplierName == firmName && obj.payment == false && obj.paymentStatus == false && obj.approvedByAdmin == true) {
                             return (
                                 obj
                             );
@@ -386,30 +386,10 @@ export default function AddPayVoucher() {
         }
     }, [])
 
-    // const [forId, setForID] = useState([]);
-
-
-    // const handleChange = (e: string) => {
-    //     alert(e)
-    //     console.log(e);
-    //     if (e in forId) {
-    //         forId.pop(e)
-    //     } else {
-    //         forId.push(e);
-    //     }
-    // }
 
 
     const handleChange = (e: string) => {
-        // alert(e);
-        // console.log(e);
-
-        // Check if the element is already in the array
         if (forId.includes(e)) {
-            // If it is, create a new array without the element
-            // const updatedForId = forId.filter((id) => id == e);
-            // setForID(updatedForId);
-            // console.log(updatedForId);
 
             console.log('same id');
 

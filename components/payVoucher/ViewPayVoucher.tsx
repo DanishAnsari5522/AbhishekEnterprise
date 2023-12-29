@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button,Input } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue, Tooltip, Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 
@@ -7,13 +7,23 @@ export default function ViewPayVoucher() {
     const router = useRouter();
     const [page, setPage] = React.useState(1);
     const [users, setUsers] = useState([]);
+    const [accountType, setAccountType] = useState('');
+    const [bankAccount, setBankAccount] = useState('');
+    const [transactionType, setTransactionType] = useState('');
+    const [payAmount, setPayAmount]: any = useState();
+    const [balance, setBalance]: any = useState();
+
+    const [discount,setDiscount]:any=useState();
+
+
+
+
 
     const data = router.query;
     const supplierName = data.supplierName;
     const recieverName = data.recieverName;
     const id = data.id;
     let total = 0;
-
     const handleFreze = async () => {
 
         let result = await fetch(`https://abhishekenterprise-api.onrender.com/v1/purchase/updatePurchase?id=${id}`, {
@@ -21,14 +31,15 @@ export default function ViewPayVoucher() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ payment: true })
+            body: JSON.stringify({ payment: true ,accountType:accountType,bankAccount:bankAccount,transactionType:transactionType,payAmount:payAmount,balance:balance})
         }).then(res => res.json()).then(
             async data => {
                 if (data.success == false) {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    onclose;
+                    // onclose;
+                    router.push('/admin/payVoucher');
                 }
             }
         )
@@ -48,7 +59,7 @@ export default function ViewPayVoucher() {
                     console.log("Error");
                 } else if (data.success == true) {
                     console.log("Hello");
-                    onclose;
+                    router.push('admin/payVoucher');
                 }
             }
         )
@@ -70,7 +81,10 @@ export default function ViewPayVoucher() {
                 } else if (data.success == true) {
                     console.log("Hello");
                     setUsers(data.message.item);
-                    console.log(data.message.item);
+                    // discount=data.message.discount;
+                    console.log(data.message.discount
+                        );
+                    setDiscount(data.message.discount)
                 }
             }
         )
@@ -189,51 +203,56 @@ export default function ViewPayVoucher() {
             </Table>
 
 
+            <div className="p-4 flex flex-row items-center">
+                <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+                <p className="flex justify-end mr-4">Discount <span className="text-xl ml-4">{discount}</span></p>
+            </div>
+
             <div className='grid grid-cols-5 max-xl:grid-cols-3 max-md:grid-cols-2 gap-3 mt-4'>
-                        <Input
-                            isClearable
-                            className="w-full"
-                            placeholder="Accoutn Type"
-                            variant="bordered"
-                            // value={productName}
-                            // onChange={(e) => { setProductName(e.target.value) }}
-                        />
+                <Input
+                    isClearable
+                    className="w-full"
+                    placeholder="Accoutn Type"
+                    variant="bordered"
+                    value={accountType}
+                    onChange={(e) => { setAccountType(e.target.value) }}
+                />
 
-                        <Input
-                            isClearable
-                            className="w-full"
-                            placeholder="Bank Account"
-                            variant="bordered"
-                            // value={gst}
-                            // onChange={(e) => { setGst(e.target.value) }}
-                        />
+                <Input
+                    isClearable
+                    className="w-full"
+                    placeholder="Bank Account"
+                    variant="bordered"
+                    value={bankAccount}
+                    onChange={(e) => { setBankAccount(e.target.value) }}
+                />
 
-                        <Input
-                            isClearable
-                            className="w-full"
-                            placeholder="Tranjection Type"
-                            variant="bordered"
-                            // value={hsnCode}
-                            // onChange={(e) => { setHsnCode(e.target.value) }}
-                        />
+                <Input
+                    isClearable
+                    className="w-full"
+                    placeholder="transection Type"
+                    variant="bordered"
+                    value={transactionType}
+                    onChange={(e) => { setTransactionType(e.target.value) }}
+                />
 
-                        <Input
-                            isClearable
-                            className="w-full"
-                            placeholder="Pay Account"
-                            variant="bordered"
-                            // value={uom}
-                            // onChange={(e) => { setUom(e.target.value) }}
-                        />
-                         <Input
-                            isClearable
-                            className="w-full"
-                            placeholder="Balance"
-                            variant="bordered"
-                            // value={uom}
-                            // onChange={(e) => { setUom(e.target.value) }}
-                        />
-                    </div>
+                <Input
+                    isClearable
+                    className="w-full"
+                    placeholder="Pay Account"
+                    variant="bordered"
+                    value={payAmount}
+                    onChange={(e) => { setPayAmount(e.target.value) }}
+                />
+                <Input
+                    isClearable
+                    className="w-full"
+                    placeholder="Balance"
+                    variant="bordered"
+                    value={balance}
+                    onChange={(e) => { setBalance(e.target.value) }}
+                />
+            </div>
 
 
 
