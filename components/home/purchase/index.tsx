@@ -29,6 +29,8 @@ export default function PurchaseDashboardTable() {
                     console.log("Hello");
                     var data1 = data.message.reverse();
                     setUsersData(data.message);
+                    console.log(data.message);
+                    
 
                     const unique2 = (data.message).filter((obj: any, index: any) => {
                         return index === (data.message).findIndex((o: any) => obj.supplierName === o.supplierName && obj.recieverName == o.recieverName && obj.approvedByAdmin == false);

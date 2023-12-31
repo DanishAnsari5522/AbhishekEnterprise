@@ -44,6 +44,8 @@ export default function AddPurchase() {
     const [companyData, setCompanyData] = useState([]);
     const [allItem, setAllItem] = useState([]);
     const [companyDataAll, setCompanyDataAll] = useState([]);
+    const [sizeDataAll, setSizeDataAll] = useState([]);
+
 
     const [uom, setUom] = useState('');
 
@@ -316,12 +318,21 @@ export default function AddPurchase() {
                     // setCompanyData(data.message);
                     setCompanyDataAll(data.message);
                     console.log(data.message);
-                    const filterArray = (data.message).filter((value: any, index: any, self: any) =>
+                    const filterArrayProduct = (data.message).filter((value: any, index: any, self: any) =>
                         index === self.findIndex((t: any) => (
                             t.name === value.name
                         ))
                     )
-                    setCompanyData(filterArray);
+                    setCompanyData(filterArrayProduct);
+
+                    const filterArrayCompany = (data.message).filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                            t.name === value.name && t.company === value.company
+                        ))
+                    )
+                    console.log(filterArrayCompany);
+
+                    setSizeDataAll(filterArrayCompany);
                 }
             }
         )
@@ -569,7 +580,7 @@ export default function AddPurchase() {
                             >
                                 <option className='font-medium'>Select Company</option>
                                 {
-                                    companyDataAll.map((value) => (
+                                    sizeDataAll.map((value) => (
                                         <>
                                             {
                                                 value['name'] == productName && <option>{value['company']}</option>
