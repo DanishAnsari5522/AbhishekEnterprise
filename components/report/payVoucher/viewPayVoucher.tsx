@@ -11,7 +11,7 @@ export default function ViewPayVoucherReport() {
     const supplierName = data.supplierName;
     const recieverName = data.recieverName;
     const id = data.id;
-    let total = 0;
+    let total:number = 0;
 
     const handleFreze = async () => {
 
@@ -118,7 +118,7 @@ export default function ViewPayVoucherReport() {
                 })
             }
 
-            <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total}</span></p>
+            <p className="flex justify-end mr-4">Total Amount <span className="text-xl ml-4">{total.toFixed(2)}</span></p>
 
             <Table
                 aria-label="Example table with client side pagination"
@@ -174,12 +174,12 @@ export default function ViewPayVoucherReport() {
                             </TableCell>
                             <TableCell>
                                 {
-                                    (parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')) / 100) * 12
+                                    ((parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')) / 100) * 12).toFixed(2)
                                 }
                             </TableCell>
                             <TableCell>
                                 {
-                                    ((parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')) / 100) * 12) + (parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')))
+                                    (Number((parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')) / 100) * 12) + (parseInt(getKeyValue(item, 'qty')) * parseInt(getKeyValue(item, 'rate')))).toFixed(2)
                                 }
                             </TableCell>
                         </TableRow>

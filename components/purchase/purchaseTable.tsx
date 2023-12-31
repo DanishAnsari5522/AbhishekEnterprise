@@ -103,7 +103,7 @@ export default function PurchaseTable() {
                                 })
                                 }
                                 {
-                                    grossTotal
+                                    grossTotal.toFixed(2)
                                 }
 
                         </TableCell>
